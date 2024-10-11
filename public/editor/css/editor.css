@@ -316,24 +316,6 @@ strong {
   text-transform: uppercase;
 }
 
-.sidebar-buttons {
-  border-top: 1px solid rgba(0, 0, 0, 0.5);
-}
-
-.sidebar-buttons a {
-  text-align: center;
-  color: #fff;
-  text-decoration: none;
-  display: block;
-  padding: 8px 0;
-  font-size: 24px
-}
-
-.sidebar-buttons a:hover {
-  background: #333;
-  color: #fff
-}
-
 .sidebar-selected-buttons {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 10px 0;

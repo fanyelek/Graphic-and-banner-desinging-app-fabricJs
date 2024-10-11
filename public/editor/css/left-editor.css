@@ -1,0 +1,46 @@
+#editor-sidebar-second {
+    position: fixed;
+    left: 70px; /* Adjust this according to the width of the left sidebar */
+    top: 55px;
+    background-color: white;
+    height: 100%;
+    width: 200px; /* Adjust width as needed */
+    border-left: 1px solid #ddd;
+    z-index: 10;
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-content {
+    padding: 15px;
+}
+
+.sidebar-content button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+
+.sidebar-buttons {
+    border-top: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.sidebar-buttons a {
+    text-align: center;
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 8px 0;
+    font-size: 24px
+}
+
+
+.sidebar-buttons a:hover {
+    background: #333;
+    color: #fff
+}
+
+.sidebar-buttons a.active {
+    background: #333;
+    color: #fff;
+  }

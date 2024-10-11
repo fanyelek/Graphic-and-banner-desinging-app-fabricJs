@@ -1,57 +1,45 @@
+
+
+
+
+
 <div id="editor-sidebar">
     <div class="sidebar-buttons">
-      <a href="#" id="add-text"><i class="fa fa-font">
+      
+    <a href="#" id="add-text"><i class="fa fa-font">
         <br>
         <p style="font-size: 11px; margin-top: 5px">add text</p>
       </i></a>
-      <!-- <a href="#" id="get-unsplah-image" data-toggle="modal" data-target="#myModal"><i class="fa fa-picture-o"><br>
-      <p style="font-size: 11px; margin-top: 5px">add text</p></i></a> -->
-
-
-
-      <!-- group of shape (add shape) Start -->
 
       <a href="#" id="toggle-shape-group">
         <i class="fa fa-cube"><br>
         <p style="font-size: 11px; margin-top: 5px">add shape</p></i> <!-- Icon for Shape Group -->
       </a>
 
-      <!-- modal of shape start -->
-      <div id="shape-group" style="display: none;">
-        <a href="#" id="add-rectangle"><i class="fa fa-square"><br>
-        <p style="font-size: 11px; margin-top: 5px">add square</p></i></a>
-        <a href="#" id="add-circle"><i class="fa fa-circle"><br>
-        <p style="font-size: 11px; margin-top: 5px">add circle</p></i></a>
-        <a href="#" id="add-ellipse"><i class="fa fa-caret-up" style="font-size: 45px;"><br>
-        <p style="font-size: 11px; margin-top: 5px">add triangle</p></i></a>
-      </div>
-      <!-- modal of shape end -->
+  </div>
+</div>
 
 
-      <!-- javascript for showing modal start -->
 
-      <script>
-        
-        document.getElementById('toggle-shape-group').addEventListener('click', function(e) {
-          e.preventDefault();
-          
-          var shapeGroup = document.getElementById('shape-group');
-          
-          // Toggle visibility of the shape group
-          if (shapeGroup.style.display === 'none' || shapeGroup.style.display === '') {
-            shapeGroup.style.display = 'block';
-          } else {
-            shapeGroup.style.display = 'none';
-          }
-        });
-
-
-      </script>
+<div id="editor-sidebar-second" style="display: none;">
+  <div class="sidebar-content">
+    <div id="content-sidebar-second">
       
-      <!-- javascript for showing modal end -->
-    <!-- group of shape (add shape) end -->
+      <div id="content-text" style="display: none;">
+        <h5>Select Text to Add</h5>
+        <button id="add-title">Add Title</button>
+        <button id="add-subtitle">Add Subtitle</button>
+        <button id="add-paragraph">Add Paragraph</button>
+      </div>
 
 
+      <div id="content-shape" style="display: none;">
+        <h5>Select Shape to Add</h5>
+        <button id="add-rectangle">Add Rectangle</button>
+        <button id="add-circle">Add Circle</button>
+        <button id="add-triangle">Add Triangle</button>
+      </div>
 
     </div>
   </div>
+</div>
