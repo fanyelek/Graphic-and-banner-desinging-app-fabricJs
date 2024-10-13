@@ -101,8 +101,8 @@ $('#add-rectangle').click(function() {
     canvas.add(rectangle)
     })
 
-    // Add Circle
-    $('#add-circle').click(function() {
+// Add Circle
+$('#add-circle').click(function() {
     let circle = new fabric.Circle({
         left: 30,
         top: 30,
@@ -113,9 +113,9 @@ $('#add-rectangle').click(function() {
         selectable: true
     });
     canvas.add(circle)
-    })
+})
 
-    $('#add-triangle').click(function() {
+$('#add-triangle').click(function() {
     let ecl = new fabric.Triangle({
         left: 30,
         top: 30,
@@ -123,7 +123,272 @@ $('#add-rectangle').click(function() {
         selectable: true
     });
     canvas.add(ecl)
-    })
+})
+
+// Add Ellipse
+$('#add-ellipse').click(function() {
+    let ellipse = new fabric.Ellipse({
+        left: 150,
+        top: 50,
+        rx: 100, // Horizontal radius
+        ry: 50,  // Vertical radius
+        fill: 'blue'
+    });
+    canvas.add(ellipse);
+});
+
+// Add Star
+$('#add-star').click(function() {
+    let starPoints = [
+        { x: 100, y: 0 },
+        { x: 120, y: 50 },
+        { x: 170, y: 50 },
+        { x: 130, y: 80 },
+        { x: 150, y: 130 },
+        { x: 100, y: 100 },
+        { x: 50, y: 130 },
+        { x: 70, y: 80 },
+        { x: 30, y: 50 },
+        { x: 80, y: 50 }
+    ];
+
+    let star = new fabric.Polygon(starPoints, {
+        left: 200,
+        top: 100,
+        fill: 'yellow',
+        stroke: 'black',
+        strokeWidth: 2
+    });
+    canvas.add(star);
+});
+
+// Add Polygon (Triangle in this case)
+$('#add-polygon').click(function() {
+    // Definisikan titik-titik segilima
+    let pentagonPoints = [
+        { x: 200, y: 0 },  // Titik atas
+        { x: 250, y: 50 }, // Kanan atas
+        { x: 225, y: 100 }, // Kanan bawah
+        { x: 175, y: 100 }, // Kiri bawah
+        { x: 150, y: 50 }   // Kiri atas
+    ];
+
+    let pentagon = new fabric.Polygon(pentagonPoints, {
+        left: 200,        // Posisi horisontal
+        top: 100,         // Posisi vertikal
+        fill: 'blue',     // Warna isi
+        stroke: 'black',  // Warna garis
+        strokeWidth: 2    // Lebar garis
+    });
+    canvas.add(pentagon);
+});
+
+// Add Polygon (Triangle in this case)
+$('#solid-line').click(function() {
+    let solidLine = new fabric.Line([50, 100, 250, 100], {
+        stroke: 'black',
+        strokeWidth: 2
+    });
+    canvas.add(solidLine);
+});
+
+// Add Polygon (Triangle in this case)
+$('#dashed-line').click(function() {
+    let dashedLine = new fabric.Line([50, 150, 250, 150], {
+        stroke: 'black',
+        strokeWidth: 2,
+        strokeDashArray: [10, 5] // Dash pattern: 10px dash, 5px gap
+    });
+    canvas.add(dashedLine);
+});
+
+// Add Polygon (Triangle in this case)
+$('#dotted-line').click(function() {
+    let dottedLine = new fabric.Line([50, 200, 250, 200], {
+        stroke: 'black',
+        strokeWidth: 2,
+        strokeDashArray: [2, 5] // Dotted pattern: 2px dot, 5px gap
+    });
+    canvas.add(dottedLine);
+});
+
+// Add Polygon (Triangle in this case)
+$('#solid-arrow-line').click(function() {
+    let lineWithArrow = new fabric.Line([50, 250, 250, 250], {
+        stroke: 'black',
+        strokeWidth: 2
+    });
+    
+    // Panah di akhir garis
+    let arrow = new fabric.Triangle({
+        left: 250,
+        top: 250,
+        originX: 'center',
+        originY: 'center',
+        angle: 90, // Atur arah panah
+        width: 10,
+        height: 20,
+        fill: 'black'
+    });
+    
+    // Membuat grup dari garis dan panah
+let lineArrowGroup = new fabric.Group([lineWithArrow, arrow], {
+    left: 50, // Atur posisi grup (optional)
+    top: 250  // Atur posisi grup (optional)
+});
+
+// Menambahkan grup ke canvas
+canvas.add(lineArrowGroup);
+});
+
+// Add Polygon (Triangle in this case)
+$('#dashed-arrow-line').click(function() {
+    let dashedLineWithArrow = new fabric.Line([50, 300, 250, 300], {
+        stroke: 'black',
+        strokeWidth: 2,
+        strokeDashArray: [10, 5] // Pola putus-putus
+    });
+    
+    let arrowForDashed = new fabric.Triangle({
+        left: 250,
+        top: 300,
+        originX: 'center',
+        originY: 'center',
+        angle: 90,
+        width: 10,
+        height: 20,
+        fill: 'black'
+    });
+    
+    // Membuat grup dari garis putus-putus dan panah
+let dashedLineArrowGroup = new fabric.Group([dashedLineWithArrow, arrowForDashed], {
+    left: 50,  // Posisi grup (optional, jika tidak, tetap menggunakan posisi default)
+    top: 300   // Posisi grup (optional)
+});
+
+// Menambahkan grup ke canvas
+canvas.add(dashedLineArrowGroup);
+});
+
+// Add Polygon (Triangle in this case)
+$('#circle-line').click(function() {
+    // Garis
+let lineWithCircleMarkers = new fabric.Line([50, 350, 250, 350], {
+    stroke: 'black',
+    strokeWidth: 2
+});
+
+// Lingkaran pertama di ujung kiri garis
+let circleMarker1 = new fabric.Circle({
+    left: 50,       // Sama dengan titik awal garis
+    top: 350,       // Sama dengan titik vertikal garis
+    radius: 5,      // Radius lingkaran
+    fill: 'black',
+    originX: 'center', // Pastikan lingkaran ditengah berdasarkan left
+    originY: 'center'  // Pastikan lingkaran ditengah berdasarkan top
+});
+
+// Lingkaran kedua di ujung kanan garis
+let circleMarker2 = new fabric.Circle({
+    left: 250,      // Sama dengan titik akhir garis
+    top: 350,       // Sama dengan titik vertikal garis
+    radius: 5,
+    fill: 'black',
+    originX: 'center',
+    originY: 'center'
+});
+
+// Menambahkan garis dan lingkaran ke canvas sebagai grup
+let lineWithMarkersGroup = new fabric.Group([lineWithCircleMarkers, circleMarker1, circleMarker2], {
+    left: 50,   // Posisi grup secara keseluruhan
+    top: 350
+});
+
+// Menambahkan grup ke canvas
+canvas.add(lineWithMarkersGroup);
+});
+
+// Add Polygon (Triangle in this case)
+$('#square-line').click(function() {
+    // Garis
+let lineWithSquareMarkers = new fabric.Line([50, 400, 250, 400], {
+    stroke: 'black',
+    strokeWidth: 2
+});
+
+// Kotak pertama di ujung kiri garis
+let squareMarker1 = new fabric.Rect({
+    left: 50,         // Titik awal garis
+    top: 400,         // Titik vertikal dari garis
+    width: 10,
+    height: 10,
+    fill: 'black',
+    originX: 'center', // Pastikan kotak ditengah berdasarkan left
+    originY: 'center'  // Pastikan kotak ditengah berdasarkan top
+});
+
+// Kotak kedua di ujung kanan garis
+let squareMarker2 = new fabric.Rect({
+    left: 250,        // Titik akhir garis
+    top: 400,         // Titik vertikal dari garis
+    width: 10,
+    height: 10,
+    fill: 'black',
+    originX: 'center',
+    originY: 'center'
+});
+
+// Menambahkan garis dan kotak ke canvas sebagai grup
+let lineWithSquareGroup = new fabric.Group([lineWithSquareMarkers, squareMarker1, squareMarker2], {
+    left: 50,   // Posisi grup secara keseluruhan
+    top: 400
+});
+
+// Menambahkan grup ke canvas
+canvas.add(lineWithSquareGroup);
+});
+
+// Add Polygon (Triangle in this case)
+$('#diamond-line').click(function() {
+    // Garis
+let lineWithDiamondMarkers = new fabric.Line([50, 450, 250, 450], {
+    stroke: 'black',
+    strokeWidth: 2
+});
+
+// Diamond pertama di ujung kiri garis
+let diamondMarker1 = new fabric.Rect({
+    left: 50,         // Titik awal garis
+    top: 450,         // Titik vertikal dari garis
+    width: 10,
+    height: 10,
+    fill: 'black',
+    originX: 'center', // Pastikan diamond ditengah berdasarkan left
+    originY: 'center', // Pastikan diamond ditengah berdasarkan top
+    angle: 45         // Rotasi untuk membuat bentuk diamond
+});
+
+// Diamond kedua di ujung kanan garis
+let diamondMarker2 = new fabric.Rect({
+    left: 250,        // Titik akhir garis
+    top: 450,         // Titik vertikal dari garis
+    width: 10,
+    height: 10,
+    fill: 'black',
+    originX: 'center',
+    originY: 'center',
+    angle: 45         // Rotasi untuk membuat bentuk diamond
+});
+
+// Menambahkan garis dan diamond ke canvas sebagai grup
+let lineWithDiamondGroup = new fabric.Group([lineWithDiamondMarkers, diamondMarker1, diamondMarker2], {
+    left: 50,   // Posisi grup secara keseluruhan
+    top: 450
+});
+
+// Menambahkan grup ke canvas
+canvas.add(lineWithDiamondGroup);
+});
 
     
     
@@ -180,12 +445,7 @@ $('#add-rectangle').click(function() {
 
 
    //=================  Add List  =======================
-
-
-   
-
-
-// Add Bullet List
+   // Add Bullet List
 let listCounter = 0; // Counter for bullet list ID
 let objectCounter = 0; // Counter for individual object ID
 
