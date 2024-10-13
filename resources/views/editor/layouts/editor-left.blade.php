@@ -18,23 +18,23 @@
         <p style="font-size: 11px; margin-top: 5px">Shape</p></i> <!-- Icon for Shape Group -->
       </a>
 
-      <!-- Add Quotes Button -->
+      <!-- Add Quotes Button
       <a href="#" id="add-quote">
           <i class="fa fa-quote-right"><br>
           <p style="font-size: 11px; margin-top: 5px">Quote</p></i>
-      </a>
+      </a> -->
 
-      <!-- Add Annotations Button -->
+      <!-- Add Annotations Button
       <a href="#" id="add-annotation">
           <i class="fa fa-sticky-note"><br>
           <p style="font-size: 11px; margin-top: 5px">Annotation</p></i>
-      </a>
+      </a> -->
 
-      <!-- Add List Button -->
+      <!-- Add List Button
       <a href="#" id="add-lists">
           <i class="fa fa-list-ul"><br>
           <p style="font-size: 11px; margin-top: 5px">Lists</p></i>
-      </a>
+      </a> -->
 
   </div>
 </div>
@@ -48,10 +48,22 @@
     <div id="content-sidebar-second">
       
       <div id="content-text" style="display: none;">
-        <h6>Select Text to Add</h6>
+        <h6>Text</h6>
         <button id="add-title">Title</button>
         <button id="add-subtitle">Subtitle</button>
         <button id="add-paragraph">Paragraph</button>
+        
+        <h6>Quotes & Annotation</h6>
+        <button id="add-quote">Quotes</button>
+        <button id="add-annotation">Annotation</button>
+        
+        <h6>List</h6>
+        <button id="add-bullet-list">Bullet List</button>
+        <button id="add-number-list">Number List</button>
+        <button id="add-checklist">Checklist</button>
+        <button id="bullet-circle">Circle Bullets</button>
+        <button id="number-roman">Roman Numerals</button>
+        <button id="number-alpha">Alphabetical Numbers</button>
       </div>
 
 
@@ -75,7 +87,7 @@
         <button id="diamond-line">Diamond Line</button>
       </div>
 
-      <div id="content-lists" style="display: none;">
+      <!-- <div id="content-lists" style="display: none;">
         <h6>List</h6>
         <button id="add-bullet-list">Bullet List</button>
         <button id="add-number-list">Number List</button>
@@ -84,12 +96,12 @@
         <button id="number-roman">Roman Numerals</button>
         <button id="number-alpha">Alphabetical Numbers</button>
         
-        <!-- <button id="bullet-square">Square Bullets</button>
+        <button id="bullet-square">Square Bullets</button>
         <button id="bullet-disc">Disc Bullets</button>
 
         <h6>Numbered Styles</h6>
-        <button id="number-decimal">Decimal Numbers</button> -->
-      </div>
+        <button id="number-decimal">Decimal Numbers</button>
+      </div> -->
 
     </div>
   </div>
