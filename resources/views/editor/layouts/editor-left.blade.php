@@ -65,18 +65,17 @@
       <div id="content-lists" style="display: none;">
         <h5>Select List Type to Add</h5>
         <button id="add-bullet-list">Add Bullet List</button>
-        <!-- <button id="add-number-list">Add Number List</button>
+        <button id="add-number-list">Add Number List</button>
         <button id="add-checklist">Add Checklist</button>
-
-        <h5>Bullet Styles</h5>
         <button id="bullet-circle">Circle Bullets</button>
-        <button id="bullet-square">Square Bullets</button>
+        <button id="number-roman">Roman Numerals</button>
+        <button id="number-alpha">Alphabetical Numbers</button>
+        
+        <!-- <button id="bullet-square">Square Bullets</button>
         <button id="bullet-disc">Disc Bullets</button>
 
         <h5>Numbered Styles</h5>
-        <button id="number-decimal">Decimal Numbers</button>
-        <button id="number-roman">Roman Numerals</button>
-        <button id="number-alpha">Alphabetical Numbers</button> -->
+        <button id="number-decimal">Decimal Numbers</button> -->
       </div>
 
     </div>
