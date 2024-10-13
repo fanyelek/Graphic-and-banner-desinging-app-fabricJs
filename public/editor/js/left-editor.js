@@ -171,12 +171,24 @@ document.getElementById('add-lists').addEventListener('click', function(e) {
 
 // Close sidebar if clicking outside of it
 document.addEventListener('click', function (event) {
+  
   const secondSidebar = document.getElementById('editor-sidebar-second');
   const editorSidebar = document.getElementById('editor-sidebar');
+  var contentText = document.getElementById('content-text');
+  var addShape = document.getElementById('content-shape');    
+  var addContentList = document.getElementById('content-lists');
+
+
   if (!secondSidebar.contains(event.target) && !editorSidebar.contains(event.target)) {
+    
     secondSidebar.style.display = 'none';
     document.querySelectorAll('.sidebar-buttons a').forEach(button => {
-      button.classList.remove('active');
+    button.classList.remove('active');
+
+    contentText.style.display = 'none';
+    addShape.style.display = 'none';
+    addContentList.style.display = 'none';
+
     });
   }
 });

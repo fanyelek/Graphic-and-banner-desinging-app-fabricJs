@@ -65,7 +65,7 @@
       <div id="content-lists" style="display: none;">
         <h5>Select List Type to Add</h5>
         <button id="add-bullet-list">Add Bullet List</button>
-        <button id="add-number-list">Add Number List</button>
+        <!-- <button id="add-number-list">Add Number List</button>
         <button id="add-checklist">Add Checklist</button>
 
         <h5>Bullet Styles</h5>
@@ -76,7 +76,7 @@
         <h5>Numbered Styles</h5>
         <button id="number-decimal">Decimal Numbers</button>
         <button id="number-roman">Roman Numerals</button>
-        <button id="number-alpha">Alphabetical Numbers</button>
+        <button id="number-alpha">Alphabetical Numbers</button> -->
       </div>
 
     </div>

@@ -239,7 +239,7 @@ object.clone(function(clone) {
       canvas.renderAll()
     }
   }
-//Text Strock
+//Text Stroke
   $('#text-stroke').on('input', function () {
     var obj = canvas.getActiveObject()
     if ($(this).val() === '0') {
@@ -351,7 +351,7 @@ object.clone(function(clone) {
     }
   })
 
-  $('#graphic-width').keyup(function() {
+  $('#graphic-width').on('input', function() {
     var width = $(this).val()
     var half_width = parseInt(width) / 2 - 20
     $('.canvas-container').width(width)
@@ -369,7 +369,7 @@ object.clone(function(clone) {
     $('input#graphic_width').val(width)
   })
 
-  $('#graphic-height').keyup(function() {
+  $('#graphic-height').on('input', function() {
     var height = $(this).val()
     var half_height = parseInt(height) / 2 - 20
     $('.canvas-container').height(height)
@@ -396,19 +396,38 @@ object.clone(function(clone) {
   $("#graphic-font").val($('input#graphic_font').val()).trigger('change');
 
 
+  function updateSidebarControls() {
+      var activeObject = canvas.getActiveObject();
+      
+      // Check if the selected object is a text object
+      if (activeObject && activeObject.type === 'i-text') {
+          // Set the font size input value
+          $('#text-font-size').val(activeObject.fontSize).trigger('change');
+      } else {
+          // Clear the input fields if no object is selected
+          $('#text-font-size').val('');
+      }
+  }
+
   canvas.on('selection:updated', function () {
-    selectedObjectSidebar()
+    selectedObjectSidebar();
+    updateSidebarControls();
   });
 
   canvas.on('selection:created', function () {
     selectedObjectSidebar()
+    updateSidebarControls()
   });
 
   canvas.on('selection:cleared', function () {
      $('#layers-tab').trigger('click')
      $('#edit-text-options, #edit-shape-options, #edit-image-options, #arrange-selected-object').hide()
+     $('#text-font-size').val('')
   });
 
+
+
+  // for selected item
   function selectedObjectSidebar() {
     var selectedObject = canvas.getActiveObjects()
     $('#editing-tab').trigger('click')
@@ -428,13 +447,39 @@ object.clone(function(clone) {
         // Get Selected Element Info
         $('#text-colorpicker').spectrum("set", canvas.getActiveObject().fill)
         $('select[data-type="fontFamily"]').val(canvas.getActiveObject().fontFamily).trigger('change')
-        $('#text-font-size').val(canvas.getActiveObject().fontSize).trigger('change')
+        
+
+        // Font Size Editing Tools
+        // Ensure input is populated with font size when text is selected
+        canvas.on('object:selected', function(e) {
+          let activeObject = canvas.getActiveObject();
+          if (activeObject && activeObject.type === 'i-text') {
+              $('#text-font-size').val(activeObject.fontSize); // Set font size to input field
+          }
+        });
+
+        // Real-time font size change
+        $('#text-font-size').on('input', function() {
+          let activeObject = canvas.getActiveObject();
+          if (activeObject && activeObject.type === 'i-text') {
+              activeObject.set({
+                  fontSize: parseInt(this.value, 10)
+              });
+              canvas.renderAll();
+          }
+        });
+
+
+
+
         $('select[data-type="lineHeight"]').val(canvas.getActiveObject().lineHeight).trigger('change')
         $('select[data-type="charSpacing"]').val(canvas.getActiveObject().charSpacing).trigger('change')
         $('#text-opacity').val(canvas.getActiveObject().opacity).trigger('change')
         $('#text-stroke-colorpicker').spectrum("set", canvas.getActiveObject().stroke)
         $('#text-stroke').val(canvas.getActiveObject().strokeWidth).trigger('change')
 
+
+        
         // Text Editing Buttons
         $('#text-editing-buttons .btn').removeClass('active')
 
@@ -697,7 +742,10 @@ object.clone(function(clone) {
     }
 
     if (activeObject) {
-        activeObject.setCoords();
+      
+      activeObjects.forEach(function(object) {
+        object.setCoords();
+      });
         canvas.renderAll();
     } else if (getActiveObjects) {
         getActiveObjects.setCoords();

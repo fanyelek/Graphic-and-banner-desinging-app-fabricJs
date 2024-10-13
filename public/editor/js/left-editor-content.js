@@ -22,7 +22,8 @@
       fill: textcolor,
       left: 100,
       top: 100,
-      objecttype: 'text'
+      objecttype: 'text',
+      lockUniScaling: true // Ensure uniform scaling
     })
     canvas.add(text)
   })
@@ -48,7 +49,8 @@
       fill: textcolor,
       left: 100,
       top: 100,
-      objecttype: 'text'
+      objecttype: 'text',
+      lockUniScaling: true // Ensure uniform scaling
     })
     canvas.add(text)
   })
@@ -74,7 +76,8 @@
       fill: textcolor,
       left: 100,
       top: 100,
-      objecttype: 'text'
+      objecttype: 'text',
+      lockUniScaling: true // Ensure uniform scaling
     })
     canvas.add(text)
   })
@@ -124,6 +127,8 @@ $('#add-rectangle').click(function() {
 
     
     
+    //=================  Add Quote  =======================
+    // Add Quote
     $('#add-quote').click(function() {
         let font = 'Georgia'; // Change the font to suit a quote style
         let textcolor = '#333'; // Darker color for quotes
@@ -139,12 +144,17 @@ $('#add-rectangle').click(function() {
           fill: textcolor,
           left: 100,
           top: 100,
-          objecttype: 'quote'
+          objecttype: 'quote',
+          lockUniScaling: true // Ensure uniform scaling
+
         });
         canvas.add(text);
     });
 
 
+
+    //=================  Add Annotations  =======================
+    // Add Annotations
     $('#add-annotation').click(function() {
         let font = 'Arial';
         let textcolor = '#ff9900'; // Orange color for annotation
@@ -159,7 +169,8 @@ $('#add-rectangle').click(function() {
           fill: textcolor,
           left: 100,
           top: 100,
-          objecttype: 'annotation'
+          objecttype: 'annotation',
+          lockUniScaling: true // Ensure uniform scaling
         });
         canvas.add(text);
     });
@@ -169,19 +180,66 @@ $('#add-rectangle').click(function() {
 
 
    //=================  Add List  =======================
+
+
+   
+
+
 // Add Bullet List
 $('#add-bullet-list').click(function() {
-    let bulletList = new fabric.IText('• Item 1\n• Item 2\n• Item 3', {
-        fontFamily: 'Arial',
-        fontSize: '16',
-        textAlign: 'left',
-        fill: '#000',
-        left: 100,
-        top: 100,
-        objecttype: 'bullet-list'
+    let bulletListText = ['• Item 1', '• Item 2', '• Item 3']; // Initial bullet list
+    
+    // Function to create new text lines and mark them as bullet items
+    function addTextLine(content, topPosition) {
+        let textItem = new fabric.IText(content, {
+            fontFamily: 'Arial',
+            fontSize: 16,
+            textAlign: 'left',
+            fill: '#000',
+            left: 100,
+            top: topPosition,
+            lockUniScaling: true // Ensure uniform scaling
+        });
+        
+        // Add a custom property to identify this as a bullet list item
+        textItem.isBullet = true;
+        
+        return textItem;
+    }
+
+    // Add initial text to the canvas
+    bulletListText.forEach(function(line, index) {
+        let bulletText = addTextLine(line, 100 + (index * 20)); // Positioning new text
+        canvas.add(bulletText);
     });
-    canvas.add(bulletList);
 });
+
+// Ensure keydown event is only added once
+document.addEventListener('keydown', function(e) {
+    let activeObject = canvas.getActiveObject();
+
+    // Check if the active object is part of the bullet list and the Enter key is pressed
+    if (e.key === 'Enter' && activeObject && activeObject.isBullet) {
+        let newLineContent = '• Edit here'; // New bullet
+
+        // Get the position of the active object and place the new bullet below it
+        let newText = new fabric.IText(newLineContent, {
+            fontFamily: 'Arial',
+            fontSize: 16,
+            textAlign: 'left',
+            fill: '#000',
+            left: activeObject.left, // Use the same left position as the active object
+            top: activeObject.top + 20, // Place the new bullet below the active object            
+            lockUniScaling: true // Ensure uniform scaling
+            
+        });
+        newText.isBullet = true; // Mark the new item as part of the bullet list
+
+        canvas.add(newText);
+        canvas.setActiveObject(newText); // Set focus on the new bullet
+    }
+});
+
 
 // Add Number List
 $('#add-number-list').click(function() {
