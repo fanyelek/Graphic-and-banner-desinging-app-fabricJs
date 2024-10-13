@@ -186,11 +186,17 @@ $('#add-rectangle').click(function() {
 
 
 // Add Bullet List
+let listCounter = 0; // Counter for bullet list ID
+let objectCounter = 0; // Counter for individual object ID
+
 $('#add-bullet-list').click(function() {
-    let bulletListText = ['• Item 1', '• Item 2', '• Item 3']; // Initial bullet list
+    listCounter++; // Increment bullet list ID for each new list
+    let bulletListId = `bulletList-${listCounter}`; // Unique ID for this bullet list
+    let bulletListText = ['• Item', '• Item', '• Item']; // Initial bullet list
     
     // Function to create new text lines and mark them as bullet items
     function addTextLine(content, topPosition) {
+        objectCounter++; // Increment object ID for each new object
         let textItem = new fabric.IText(content, {
             fontFamily: 'Arial',
             fontSize: 16,
@@ -201,8 +207,10 @@ $('#add-bullet-list').click(function() {
             lockUniScaling: true // Ensure uniform scaling
         });
         
-        // Add a custom property to identify this as a bullet list item
+        // Add custom properties to identify bullet list and object
         textItem.isBullet = true;
+        textItem.bulletListId = bulletListId; // ID for bullet list
+        textItem.objectId = `object-${objectCounter}`; // Unique ID for each object
         
         return textItem;
     }
@@ -221,6 +229,7 @@ document.addEventListener('keydown', function(e) {
     // Check if the active object is part of the bullet list and the Enter key is pressed
     if (e.key === 'Enter' && activeObject && activeObject.isBullet) {
         let newLineContent = '• Edit here'; // New bullet
+        objectCounter++; // Increment object ID for the new object
 
         // Get the position of the active object and place the new bullet below it
         let newText = new fabric.IText(newLineContent, {
@@ -231,12 +240,32 @@ document.addEventListener('keydown', function(e) {
             left: activeObject.left, // Use the same left position as the active object
             top: activeObject.top + 20, // Place the new bullet below the active object            
             lockUniScaling: true // Ensure uniform scaling
-            
         });
-        newText.isBullet = true; // Mark the new item as part of the bullet list
 
+        // Assign the same bulletListId as the active object and a new unique objectId
+        newText.isBullet = true;
+        newText.bulletListId = activeObject.bulletListId; // Use the same bullet list ID
+        newText.objectId = `object-${objectCounter}`; // Unique ID for the new object
+
+        // Find the other objects in the same bullet list and shift them down if necessary
+        let objectsToShift = canvas.getObjects().filter(obj => 
+            obj.bulletListId === activeObject.bulletListId && obj.objectId !== activeObject.objectId && obj.top > activeObject.top
+        );
+        
+        // Shift objects down and re-render
+        objectsToShift.forEach(obj => {
+            obj.top += 20; // Shift objects down
+            obj.setCoords(); // Ensure that Fabric.js knows the object's new position
+        });
+
+        // Add new text and refresh canvas
         canvas.add(newText);
         canvas.setActiveObject(newText); // Set focus on the new bullet
+        canvas.renderAll(); // Re-render the canvas to show changes
+
+        // Optional: Bring all objects in the list to front to avoid z-index issues
+        objectsToShift.forEach(obj => obj.bringToFront());
+        newText.bringToFront(); // Bring the newly added text to the front
     }
 });
 
@@ -347,4 +376,31 @@ $('#number-alpha').click(function() {
         objecttype: 'number-alpha'
     });
     canvas.add(numberAlpha);
+});
+
+
+$(document).ready(function() {
+      // Event listener ketika objek dipilih
+  canvas.on('object:selected', function(e) {
+    let activeObject = e.target;
+
+    // Jika objek yang dipilih adalah bagian dari bullet list
+    if (activeObject.isBullet) {
+        // Cari semua objek dengan bulletListId yang sama
+        let objectsInSameList = canvas.getObjects().filter(obj => 
+            obj.bulletListId === activeObject.bulletListId
+        );
+
+        // Jika lebih dari satu objek dalam bullet list, buat grup baru
+        if (objectsInSameList.length > 1) {
+            let group = new fabric.ActiveSelection(objectsInSameList, {
+                canvas: canvas
+            });
+            
+            // Set grup sebagai objek aktif
+            canvas.setActiveObject(group);
+            canvas.renderAll(); // Render ulang canvas dengan grup yang aktif
+        }
+    }
+  });
 });
