@@ -183,36 +183,139 @@ $('#add-polygon').click(function() {
     canvas.add(pentagon);
 });
 
-// Add Polygon (Triangle in this case)
+
+
+// solid-line
 $('#solid-line').click(function() {
+    // Membuat garis
     let solidLine = new fabric.Line([50, 100, 250, 100], {
         stroke: 'black',
-        strokeWidth: 2
+        strokeWidth: 2,
+        hasControls: true,  // Aktifkan kontrol objek
+        lockScalingY: true, // Mengunci scaling di arah vertikal (Y)
+        lockMovementY: true // Mengunci pergerakan vertikal (Y)
     });
+
+    // Menambahkan garis ke canvas
     canvas.add(solidLine);
+
+    // Nonaktifkan kontrol sudut, hanya memungkinkan kontrol di sisi-sisinya
+    solidLine.controls = fabric.Object.prototype.controls;
+    solidLine.setControlVisible('mt', false); // Nonaktifkan kontrol tengah atas
+    solidLine.setControlVisible('mb', false); // Nonaktifkan kontrol tengah bawah
+    solidLine.setControlVisible('tl', false); // Nonaktifkan kontrol sudut kiri atas
+    solidLine.setControlVisible('tr', false); // Nonaktifkan kontrol sudut kanan atas
+    solidLine.setControlVisible('bl', false); // Nonaktifkan kontrol sudut kiri bawah
+    solidLine.setControlVisible('br', false); // Nonaktifkan kontrol sudut kanan bawah
+
+    // Render ulang canvas untuk memastikan perubahan diterapkan
+    canvas.renderAll();
 });
 
-// Add Polygon (Triangle in this case)
+
+
 $('#dashed-line').click(function() {
     let dashedLine = new fabric.Line([50, 150, 250, 150], {
         stroke: 'black',
         strokeWidth: 2,
-        strokeDashArray: [10, 5] // Dash pattern: 10px dash, 5px gap
+        strokeDashArray: [10, 5], // Dash pattern awal
+        lockScalingY: true, // Kunci scaling pada arah vertikal
+        // lockMovementY: true, // Kunci pergerakan vertikal
+        // strokeUniform: true // Jaga stroke agar tetap seragam saat di-scale
     });
     canvas.add(dashedLine);
-});
 
-// Add Polygon (Triangle in this case)
-$('#dotted-line').click(function() {
-    let dottedLine = new fabric.Line([50, 200, 250, 200], {
-        stroke: 'black',
-        strokeWidth: 2,
-        strokeDashArray: [2, 5] // Dotted pattern: 2px dot, 5px gap
+    // Nonaktifkan kontrol sudut, hanya memungkinkan resize horizontal
+    dashedLine.controls = fabric.Object.prototype.controls;
+    dashedLine.setControlVisible('mt', false);
+    dashedLine.setControlVisible('mb', false);
+    dashedLine.setControlVisible('tl', false);
+    dashedLine.setControlVisible('tr', false);
+    dashedLine.setControlVisible('bl', false);
+    dashedLine.setControlVisible('br', false);
+
+    // Event listener untuk scaling (yang di-trigger saat objek sedang di-resize)
+    dashedLine.on('scaling', function() {
+        // Ambil koordinat sudut kiri atas (tl) dan sudut kanan bawah (br)
+        let tl = dashedLine.aCoords.tl;
+        let tr = dashedLine.aCoords.tr;
+    
+        // Hitung panjang baru garis menggunakan rumus Pythagoras
+        let newWidth = Math.sqrt(Math.pow(tr.x - tl.x, 2) + Math.pow(tr.y - tl.y, 2));
+    
+        // Tentukan panjang dash dan gap
+        let dashPatternLength = 15; // Total panjang dash dan gap
+        let numDashes = Math.floor(newWidth / dashPatternLength); // Tentukan jumlah dash yang diperlukan
+    
+        // Hitung ulang dashLength dan gapLength untuk mendistribusikan pola secara merata
+        let dashLength = (newWidth / numDashes) * (2/3); // Sesuaikan panjang dash (2/3 dari total)
+        let gapLength = (newWidth / numDashes) * (1/3);  // Sesuaikan panjang gap (1/3 dari total)
+    
+        // Update strokeDashArray sehingga pola dash/gap didistribusikan merata
+        dashedLine.set({
+            strokeDashArray: [dashLength, gapLength] // Panjang dash dan gap diupdate
+        });
+    
+        dashedLine.setCoords(); // Update koordinat objek
+        console.log(dashedLine); // Menampilkan nilai dari aCoords.br
+        canvas.renderAll(); // Render ulang canvas
     });
-    canvas.add(dottedLine);
+
+    // Event listener untuk memastikan pembaruan terjadi selama resizing berlangsung
+    canvas.on('object:scaling', function() {
+        canvas.renderAll(); // Render ulang canvas secara dinamis saat objek di-scaling
+    });
+    
+
+    // Render ulang canvas
+    canvas.renderAll();
 });
 
-// Add Polygon (Triangle in this case)
+// dotted-line
+$('#dotted-line').click(function() {
+    // Inisialisasi variabel untuk menampung dot
+    let dots = [];
+    
+    // Tentukan jarak antara dot dan ukuran dot
+    let dotSize = 2; // Ukuran dot (radius lingkaran)
+    let gapSize = 5; // Jarak antara dot
+    
+    // Buat beberapa dot pada posisi awal
+    let initialLength = 290; // Panjang awal dotted line
+    let totalPatternLength = dotSize * 2 + gapSize; // Total panjang dot + gap
+    let numDots = Math.floor(initialLength / totalPatternLength); // Tentukan jumlah dot awal
+    
+    // Tambahkan dot ke array 'dots'
+    for (let i = 0; i < numDots; i++) {
+        let dot = new fabric.Circle({
+            left: 50 + (i * totalPatternLength), // Mengatur posisi horizontal dot
+            top: 200, // Posisi vertikal tetap
+            radius: dotSize,
+            fill: 'black',
+            selectable: true // Agar dot tidak bisa dipilih satu per satu
+        });
+        dots.push(dot); // Tambahkan dot ke array dots
+    }
+    
+    // Gabungkan semua dot ke dalam satu grup
+    let dottedLine = new fabric.Group(dots);
+
+    dottedLine.setControlVisible('mt', false);
+    dottedLine.setControlVisible('mb', false);
+    dottedLine.setControlVisible('tl', false);
+    dottedLine.setControlVisible('tr', false);
+    dottedLine.setControlVisible('bl', false);
+    dottedLine.setControlVisible('br', false);
+    canvas.add(dottedLine);
+    
+    
+    // Render ulang canvas
+    canvas.renderAll();
+});
+
+
+
+// solid-arrow-line
 $('#solid-arrow-line').click(function() {
     let lineWithArrow = new fabric.Line([50, 250, 250, 250], {
         stroke: 'black',
@@ -232,16 +335,29 @@ $('#solid-arrow-line').click(function() {
     });
     
     // Membuat grup dari garis dan panah
-let lineArrowGroup = new fabric.Group([lineWithArrow, arrow], {
-    left: 50, // Atur posisi grup (optional)
-    top: 250  // Atur posisi grup (optional)
+    let lineArrowGroup = new fabric.Group([lineWithArrow, arrow], {
+        left: 50, // Atur posisi grup (optional)
+        top: 250  // Atur posisi grup (optional)
+    });
+
+    // Menambahkan grup ke canvas
+    canvas.add(lineArrowGroup);
+
+    lineArrowGroup.controls = fabric.Object.prototype.controls;
+    lineArrowGroup.setControlVisible('mt', false); // Nonaktifkan kontrol tengah atas
+    lineArrowGroup.setControlVisible('mb', false); // Nonaktifkan kontrol tengah bawah
+    lineArrowGroup.setControlVisible('tl', false); // Nonaktifkan kontrol sudut kiri atas
+    lineArrowGroup.setControlVisible('tr', false); // Nonaktifkan kontrol sudut kanan atas
+    lineArrowGroup.setControlVisible('bl', false); // Nonaktifkan kontrol sudut kiri bawah
+    lineArrowGroup.setControlVisible('br', false); // Nonaktifkan kontrol sudut kanan bawah
+
+    // Render ulang canvas untuk memastikan perubahan diterapkan
+    canvas.renderAll();
 });
 
-// Menambahkan grup ke canvas
-canvas.add(lineArrowGroup);
-});
 
-// Add Polygon (Triangle in this case)
+
+// dashed-arrow-line
 $('#dashed-arrow-line').click(function() {
     let dashedLineWithArrow = new fabric.Line([50, 300, 250, 300], {
         stroke: 'black',
@@ -261,16 +377,30 @@ $('#dashed-arrow-line').click(function() {
     });
     
     // Membuat grup dari garis putus-putus dan panah
-let dashedLineArrowGroup = new fabric.Group([dashedLineWithArrow, arrowForDashed], {
-    left: 50,  // Posisi grup (optional, jika tidak, tetap menggunakan posisi default)
-    top: 300   // Posisi grup (optional)
+    let dashedLineArrowGroup = new fabric.Group([dashedLineWithArrow, arrowForDashed], {
+        left: 50,  // Posisi grup (optional, jika tidak, tetap menggunakan posisi default)
+        top: 300   // Posisi grup (optional)
+    });
+
+    // Menambahkan grup ke canvas
+    canvas.add(dashedLineArrowGroup);
+
+    dashedLineArrowGroup.controls = fabric.Object.prototype.controls;
+    dashedLineArrowGroup.setControlVisible('mt', false); // Nonaktifkan kontrol tengah atas
+    dashedLineArrowGroup.setControlVisible('mb', false); // Nonaktifkan kontrol tengah bawah
+    dashedLineArrowGroup.setControlVisible('tl', false); // Nonaktifkan kontrol sudut kiri atas
+    dashedLineArrowGroup.setControlVisible('tr', false); // Nonaktifkan kontrol sudut kanan atas
+    dashedLineArrowGroup.setControlVisible('bl', false); // Nonaktifkan kontrol sudut kiri bawah
+    dashedLineArrowGroup.setControlVisible('br', false); // Nonaktifkan kontrol sudut kanan bawah
+
+    // Render ulang canvas untuk memastikan perubahan diterapkan
+    canvas.renderAll();
 });
 
-// Menambahkan grup ke canvas
-canvas.add(dashedLineArrowGroup);
-});
 
-// Add Polygon (Triangle in this case)
+
+
+// circle-line
 $('#circle-line').click(function() {
     // Garis
 let lineWithCircleMarkers = new fabric.Line([50, 350, 250, 350], {
@@ -306,9 +436,23 @@ let lineWithMarkersGroup = new fabric.Group([lineWithCircleMarkers, circleMarker
 
 // Menambahkan grup ke canvas
 canvas.add(lineWithMarkersGroup);
+
+lineWithMarkersGroup.controls = fabric.Object.prototype.controls;
+lineWithMarkersGroup.setControlVisible('mt', false); // Nonaktifkan kontrol tengah atas
+lineWithMarkersGroup.setControlVisible('mb', false); // Nonaktifkan kontrol tengah bawah
+lineWithMarkersGroup.setControlVisible('tl', false); // Nonaktifkan kontrol sudut kiri atas
+lineWithMarkersGroup.setControlVisible('tr', false); // Nonaktifkan kontrol sudut kanan atas
+lineWithMarkersGroup.setControlVisible('bl', false); // Nonaktifkan kontrol sudut kiri bawah
+lineWithMarkersGroup.setControlVisible('br', false); // Nonaktifkan kontrol sudut kanan bawah
+
+// Render ulang canvas untuk memastikan perubahan diterapkan
+canvas.renderAll();
 });
 
-// Add Polygon (Triangle in this case)
+
+
+
+// square-line
 $('#square-line').click(function() {
     // Garis
 let lineWithSquareMarkers = new fabric.Line([50, 400, 250, 400], {
@@ -346,48 +490,73 @@ let lineWithSquareGroup = new fabric.Group([lineWithSquareMarkers, squareMarker1
 
 // Menambahkan grup ke canvas
 canvas.add(lineWithSquareGroup);
+
+lineWithSquareGroup.controls = fabric.Object.prototype.controls;
+lineWithSquareGroup.setControlVisible('mt', false); // Nonaktifkan kontrol tengah atas
+lineWithSquareGroup.setControlVisible('mb', false); // Nonaktifkan kontrol tengah bawah
+lineWithSquareGroup.setControlVisible('tl', false); // Nonaktifkan kontrol sudut kiri atas
+lineWithSquareGroup.setControlVisible('tr', false); // Nonaktifkan kontrol sudut kanan atas
+lineWithSquareGroup.setControlVisible('bl', false); // Nonaktifkan kontrol sudut kiri bawah
+lineWithSquareGroup.setControlVisible('br', false); // Nonaktifkan kontrol sudut kanan bawah
+
+// Render ulang canvas untuk memastikan perubahan diterapkan
+canvas.renderAll();
 });
 
-// Add Polygon (Triangle in this case)
+
+
+
+// diamond-line
 $('#diamond-line').click(function() {
     // Garis
-let lineWithDiamondMarkers = new fabric.Line([50, 450, 250, 450], {
-    stroke: 'black',
-    strokeWidth: 2
-});
+    let lineWithDiamondMarkers = new fabric.Line([50, 450, 250, 450], {
+        stroke: 'black',
+        strokeWidth: 2
+    });
 
-// Diamond pertama di ujung kiri garis
-let diamondMarker1 = new fabric.Rect({
-    left: 50,         // Titik awal garis
-    top: 450,         // Titik vertikal dari garis
-    width: 10,
-    height: 10,
-    fill: 'black',
-    originX: 'center', // Pastikan diamond ditengah berdasarkan left
-    originY: 'center', // Pastikan diamond ditengah berdasarkan top
-    angle: 45         // Rotasi untuk membuat bentuk diamond
-});
+    // Diamond pertama di ujung kiri garis
+    let diamondMarker1 = new fabric.Rect({
+        left: 50,         // Titik awal garis
+        top: 450,         // Titik vertikal dari garis
+        width: 10,
+        height: 10,
+        fill: 'black',
+        originX: 'center', // Pastikan diamond ditengah berdasarkan left
+        originY: 'center', // Pastikan diamond ditengah berdasarkan top
+        angle: 45         // Rotasi untuk membuat bentuk diamond
+    });
 
-// Diamond kedua di ujung kanan garis
-let diamondMarker2 = new fabric.Rect({
-    left: 250,        // Titik akhir garis
-    top: 450,         // Titik vertikal dari garis
-    width: 10,
-    height: 10,
-    fill: 'black',
-    originX: 'center',
-    originY: 'center',
-    angle: 45         // Rotasi untuk membuat bentuk diamond
-});
+    // Diamond kedua di ujung kanan garis
+    let diamondMarker2 = new fabric.Rect({
+        left: 250,        // Titik akhir garis
+        top: 450,         // Titik vertikal dari garis
+        width: 10,
+        height: 10,
+        fill: 'black',
+        originX: 'center',
+        originY: 'center',
+        angle: 45         // Rotasi untuk membuat bentuk diamond
+    });
 
-// Menambahkan garis dan diamond ke canvas sebagai grup
-let lineWithDiamondGroup = new fabric.Group([lineWithDiamondMarkers, diamondMarker1, diamondMarker2], {
-    left: 50,   // Posisi grup secara keseluruhan
-    top: 450
-});
+    // Menambahkan garis dan diamond ke canvas sebagai grup
+    let lineWithDiamondGroup = new fabric.Group([lineWithDiamondMarkers, diamondMarker1, diamondMarker2], {
+        left: 50,   // Posisi grup secara keseluruhan
+        top: 450
+    });
 
-// Menambahkan grup ke canvas
-canvas.add(lineWithDiamondGroup);
+    // Menambahkan grup ke canvas
+    canvas.add(lineWithDiamondGroup);
+
+    lineWithDiamondGroup.controls = fabric.Object.prototype.controls;
+    lineWithDiamondGroup.setControlVisible('mt', false); // Nonaktifkan kontrol tengah atas
+    lineWithDiamondGroup.setControlVisible('mb', false); // Nonaktifkan kontrol tengah bawah
+    lineWithDiamondGroup.setControlVisible('tl', false); // Nonaktifkan kontrol sudut kiri atas
+    lineWithDiamondGroup.setControlVisible('tr', false); // Nonaktifkan kontrol sudut kanan atas
+    lineWithDiamondGroup.setControlVisible('bl', false); // Nonaktifkan kontrol sudut kiri bawah
+    lineWithDiamondGroup.setControlVisible('br', false); // Nonaktifkan kontrol sudut kanan bawah
+
+    // Render ulang canvas untuk memastikan perubahan diterapkan
+    canvas.renderAll();
 });
 
     
