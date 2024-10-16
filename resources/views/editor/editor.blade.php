@@ -25,6 +25,7 @@
     <div id="editor-content">
       <div id="editor-canvas">
         <canvas id="graphic-editor" width='500px' height='500px'></canvas>
+        <!-- <div id="konva-container"></div> -->
       </div>
     </div>
 

@@ -67,6 +67,7 @@ document.getElementById('toggle-shape-group').addEventListener('click', function
 
   // Add active state to the clicked button
   this.classList.add('active');
+  // console.log(document.getElementById('toggle-shape-group').classList);
 
   var addShape = document.getElementById('content-shape');
   var contentText = document.getElementById('content-text');  
@@ -110,64 +111,6 @@ document.getElementById('toggle-shape-group').addEventListener('click', function
 });
 
 
-  
-
-// javascript for Bullet List
-  
-document.getElementById('add-lists').addEventListener('click', function(e) {
-  e.preventDefault();
-  
-  // Reset all buttons to remove active state
-  document.querySelectorAll('.sidebar-buttons a').forEach(button => {
-      button.classList.remove('active');
-  });
-
-  // Add active state to the clicked button
-  this.classList.add('active');
-
-  var addShape = document.getElementById('content-shape');
-  var addContentList = document.getElementById('content-lists');
-  var contentText = document.getElementById('content-text');
-  
-  /// Show the second sidebar and update content for shapes
-  var secondSidebar = document.getElementById('editor-sidebar-second');
-
-
-    // Toggle visibility of the second sidebar
-    if (secondSidebar.style.display === 'block') {
-
-      if(contentText.style.display === 'block'){
-        
-        contentText.style.display = 'none';
-        contentText.classList.remove('active');
-        addShape.style.display = 'none';
-        addContentList.style.display = 'block';
-
-        }else if(addShape.style.display === 'block'){
-
-          addShape.style.display = 'none';
-          addShape.classList.remove('active');
-          contentText.style.display = 'none';
-          addContentList.style.display = 'block';
-          
-        }else{
-
-          secondSidebar.style.display = 'none';
-          this.classList.remove('active');
-          addContentList.style.display = 'none';
-        
-        }
-        
-      } else {
-
-        secondSidebar.style.display = 'block';
-        addContentList.style.display = 'block';
-    
-      }
-
-});
-
-
 
 // Close sidebar if clicking outside of it
 document.addEventListener('click', function (event) {
@@ -176,7 +119,6 @@ document.addEventListener('click', function (event) {
   const editorSidebar = document.getElementById('editor-sidebar');
   var contentText = document.getElementById('content-text');
   var addShape = document.getElementById('content-shape');    
-  var addContentList = document.getElementById('content-lists');
 
 
   if (!secondSidebar.contains(event.target) && !editorSidebar.contains(event.target)) {
@@ -187,7 +129,9 @@ document.addEventListener('click', function (event) {
 
     contentText.style.display = 'none';
     addShape.style.display = 'none';
-    addContentList.style.display = 'none';
+
+    isDrawingDashLine = false;
+    DashLineMode = false
 
     });
   }

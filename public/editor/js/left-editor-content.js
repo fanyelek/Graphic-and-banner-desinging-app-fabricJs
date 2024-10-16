@@ -214,63 +214,153 @@ $('#solid-line').click(function() {
 
 
 
+
+
+
+//Dash Line
+let isDrawingDashLine;
+let DashLineMode;
+
 $('#dashed-line').click(function() {
-    let dashedLine = new fabric.Line([50, 150, 250, 150], {
-        stroke: 'black',
-        strokeWidth: 2,
-        strokeDashArray: [10, 5], // Dash pattern awal
-        lockScalingY: true, // Kunci scaling pada arah vertikal
-        // lockMovementY: true, // Kunci pergerakan vertikal
-        // strokeUniform: true // Jaga stroke agar tetap seragam saat di-scale
-    });
-    canvas.add(dashedLine);
+    DashLineMode = true;
+    let isEditing = false;
+    let activePoint = null;
+    let activeLine = null;
+    isDrawingDashLine = true;
+    let lineId = 0;
+    let dashedLines = [];
+    let isMoving = false; // Status apakah garis sedang dipindahkan
+    let offsetX, offsetY; // Untuk menyimpan offset pergerakan saat garis dipindahkan
 
-    // Nonaktifkan kontrol sudut, hanya memungkinkan resize horizontal
-    dashedLine.controls = fabric.Object.prototype.controls;
-    dashedLine.setControlVisible('mt', false);
-    dashedLine.setControlVisible('mb', false);
-    dashedLine.setControlVisible('tl', false);
-    dashedLine.setControlVisible('tr', false);
-    dashedLine.setControlVisible('bl', false);
-    dashedLine.setControlVisible('br', false);
+    // Mode edit garis (ubah kursor saat berada di mode edit)
+    function enterEditMode() {
+        document.body.style.cursor = 'crosshair'; // Ubah kursor saat mode edit
+    }
 
-    // Event listener untuk scaling (yang di-trigger saat objek sedang di-resize)
-    dashedLine.on('scaling', function() {
-        // Ambil koordinat sudut kiri atas (tl) dan sudut kanan bawah (br)
-        let tl = dashedLine.aCoords.tl;
-        let tr = dashedLine.aCoords.tr;
+    function exitEditMode() {
+        document.body.style.cursor = 'default'; // Kembalikan kursor normal
+    }
+
+    // Fungsi untuk menghitung jarak antara titik dan garis
+    function distanceToLine(x, y, line) {
+        const A = line.y2 - line.y1;
+        const B = line.x1 - line.x2;
+        const C = line.x2 * line.y1 - line.x1 * line.y2;
+        return Math.abs(A * x + B * y + C) / Math.sqrt(A * A + B * B);
+    }
+
+    // Event listener untuk memulai gambar garis manual atau memilih garis yang ada
     
-        // Hitung panjang baru garis menggunakan rumus Pythagoras
-        let newWidth = Math.sqrt(Math.pow(tr.x - tl.x, 2) + Math.pow(tr.y - tl.y, 2));
+        canvas.on('mouse:down', function(opt) {
+            let pointer = canvas.getPointer(opt.e);
     
-        // Tentukan panjang dash dan gap
-        let dashPatternLength = 15; // Total panjang dash dan gap
-        let numDashes = Math.floor(newWidth / dashPatternLength); // Tentukan jumlah dash yang diperlukan
+            // Jika sedang tidak menggambar, periksa apakah pengguna mengklik garis yang ada
+            if (!isDrawingDashLine) {
+                console.log('disini');
+                for (let i = 0; i < dashedLines.length; i++) {
+                    let line = dashedLines[i];
+                    let distanceToStart = Math.sqrt(Math.pow(pointer.x - line.x1, 2) + Math.pow(pointer.y - line.y1, 2));
+                    let distanceToEnd = Math.sqrt(Math.pow(pointer.x - line.x2, 2) + Math.pow(pointer.y - line.y2, 2));
+                    let distanceToLineBody = distanceToLine(pointer.x, pointer.y, line);
     
-        // Hitung ulang dashLength dan gapLength untuk mendistribusikan pola secara merata
-        let dashLength = (newWidth / numDashes) * (2/3); // Sesuaikan panjang dash (2/3 dari total)
-        let gapLength = (newWidth / numDashes) * (1/3);  // Sesuaikan panjang gap (1/3 dari total)
-    
-        // Update strokeDashArray sehingga pola dash/gap didistribusikan merata
-        dashedLine.set({
-            strokeDashArray: [dashLength, gapLength] // Panjang dash dan gap diupdate
+                    // Jika klik dekat salah satu ujung garis, masuk ke mode edit
+                    if (distanceToStart < 10) {
+                        isEditing = true;
+                        activePoint = 'start';
+                        activeLine = line;
+                        enterEditMode();
+                        return;
+                    } else if (distanceToEnd < 10) {
+                        isEditing = true;
+                        activePoint = 'end';
+                        activeLine = line;
+                        enterEditMode();
+                        return;
+                    } else if (distanceToLineBody < 10) { 
+                        // Jika klik dekat badan garis (tetapi tidak dekat dengan ujung)
+                        isMoving = true;
+                        activeLine = line;
+                        offsetX = pointer.x - line.left; // Hitung offset dari posisi garis ke klik
+                        offsetY = pointer.y - line.top;
+                        object:selected;
+                        enterEditMode();
+                        return;
+                    }
+                }
+            }
+
+            if(DashLineMode == true){
+        
+                // Jika tidak ada garis yang dipilih, mulai gambar garis baru
+                // isDrawingDashLine = true;
+        
+                // Buat objek garis baru
+                let dashedLine = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
+                    id: `line_${lineId++}`,
+                    stroke: 'black',
+                    strokeWidth: 2,
+                    strokeDashArray: [10, 5], // Dash pattern
+                    // selectable: 
+                    evented: false
+                });
+        
+                dashedLines.push(dashedLine);
+                canvas.add(dashedLine);
+                
+            }
         });
-    
-        dashedLine.setCoords(); // Update koordinat objek
-        console.log(dashedLine); // Menampilkan nilai dari aCoords.br
-        canvas.renderAll(); // Render ulang canvas
+
+    // Event listener untuk memperbarui posisi garis selama proses menggambar, mengedit, atau memindahkan
+    canvas.on('mouse:move', function(opt) {
+        console.log(DashLineMode);
+        let pointer = canvas.getPointer(opt.e);
+
+        if (isDrawingDashLine && dashedLines.length > 0) {
+            // Update titik akhir dari garis saat mouse bergerak
+            let lastLine = dashedLines[dashedLines.length - 1];
+            lastLine.set({ x2: pointer.x, y2: pointer.y });
+            canvas.renderAll();
+        } else if (isEditing && activeLine) {
+            // Jika sedang mengedit titik awal atau akhir
+            if (activePoint === 'start') {
+                activeLine.set({ x1: pointer.x, y1: pointer.y });
+            } else if (activePoint === 'end') {
+                activeLine.set({ x2: pointer.x, y2: pointer.y });
+            }
+            canvas.renderAll();
+        } else if (isMoving && activeLine) {
+            // Jika sedang memindahkan garis
+            let newLeft = pointer.x - offsetX;
+            let newTop = pointer.y - offsetY;
+
+            // Pindahkan garis tanpa mengubah skala
+            let deltaX = newLeft - activeLine.left;
+            let deltaY = newTop - activeLine.top;
+            activeLine.set({
+                x1: activeLine.x1 + deltaX,
+                y1: activeLine.y1 + deltaY,
+                x2: activeLine.x2 + deltaX,
+                y2: activeLine.y2 + deltaY
+            });
+            activeLine.setCoords(); // Perbarui koordinat
+            canvas.renderAll();
+        }
     });
 
-    // Event listener untuk memastikan pembaruan terjadi selama resizing berlangsung
-    canvas.on('object:scaling', function() {
-        canvas.renderAll(); // Render ulang canvas secara dinamis saat objek di-scaling
+    // Event listener untuk menyelesaikan gambar garis, edit, atau pindah
+    canvas.on('mouse:up', function() {
+        isDrawingDashLine = false;
+        isEditing = false;
+        isMoving = false;
+        activeLine = null;
+        activePoint = null;
+        exitEditMode();
+        canvas.renderAll();
     });
-    
-
-    // Render ulang canvas
-    canvas.renderAll();
 });
 
+
+ 
 // dotted-line
 $('#dotted-line').click(function() {
     // Inisialisasi variabel untuk menampung dot

@@ -407,6 +407,8 @@ strong {
   margin: 5px 0;
   color: #fff;
 }
+
+
 #editor-canvas{
   overflow-x: scroll;
 }
@@ -436,6 +438,13 @@ strong {
   box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.2), 0 0 200px rgba(0, 0, 0, 0.3);
 }
 
+#konva-container {
+  position: absolute; /* Position Konva.js container absolutely */
+  top: 0;
+  left: 0;
+  z-index: 2; /* Higher z-index to overlay on top of Fabric.js */
+  pointer-events: none; /* Optional: Disable pointer events to make only Fabric.js canvas interactive */
+}
 /* Text Editing */
 
 #text-toolbar {
