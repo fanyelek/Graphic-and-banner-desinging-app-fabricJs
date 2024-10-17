@@ -524,44 +524,136 @@ $('#dotted-line').click(function() {
 
 
 
-// solid-arrow-line
+
+//add solid arrow manual
+let mouseDown = false;
+let arrowHead1;
+
 $('#solid-arrow-line').click(function() {
-    let lineWithArrow = new fabric.Line([50, 250, 250, 250], {
-        stroke: 'black',
-        strokeWidth: 2
+    canvas.on({
+        'mouse:down': startAddingSingleArrowLine,
+        'mouse:move': startDrawingSingleArrowLine,
+        'mouse:up': stopDrawingSingleArrowLine 
     });
     
-    // Panah di akhir garis
-    let arrow = new fabric.Triangle({
-        left: 250,
-        top: 250,
-        originX: 'center',
-        originY: 'center',
-        angle: 90, // Atur arah panah
-        width: 10,
-        height: 20,
-        fill: 'black'
-    });
+    function activateAddingSingleArrowLine() {
+        if (addingSingleArrowLineBtnClicked === false) {
+            addingSingleArrowLineBtnClicked = true;
     
-    // Membuat grup dari garis dan panah
-    let lineArrowGroup = new fabric.Group([lineWithArrow, arrow], {
-        left: 50, // Atur posisi grup (optional)
-        top: 250  // Atur posisi grup (optional)
-    });
+            canvas.on({
+                'mouse:down': startAddingSingleArrowLine,
+                'mouse:move': startDrawingSingleArrowLine,
+                'mouse:up': stopDrawingSingleArrowLine 
+            });
+        }
+    }
 
-    // Menambahkan grup ke canvas
-    canvas.add(lineArrowGroup);
+    function startAddingSingleArrowLine(o) {
 
-    lineArrowGroup.controls = fabric.Object.prototype.controls;
-    lineArrowGroup.setControlVisible('mt', false); // Nonaktifkan kontrol tengah atas
-    lineArrowGroup.setControlVisible('mb', false); // Nonaktifkan kontrol tengah bawah
-    lineArrowGroup.setControlVisible('tl', false); // Nonaktifkan kontrol sudut kiri atas
-    lineArrowGroup.setControlVisible('tr', false); // Nonaktifkan kontrol sudut kanan atas
-    lineArrowGroup.setControlVisible('bl', false); // Nonaktifkan kontrol sudut kiri bawah
-    lineArrowGroup.setControlVisible('br', false); // Nonaktifkan kontrol sudut kanan bawah
+        mouseDown = true;
 
-    // Render ulang canvas untuk memastikan perubahan diterapkan
-    canvas.renderAll();
+        let pointer = canvas.getPointer(o.e);
+
+        line = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
+            id: 'added-single-arrow-line',
+            stroke: 'red',
+            strokeWidth: 3,
+            selectable: true,
+            hasControls: false
+        });
+
+        arrowHead1 = new fabric.Polygon([
+            {x: 0, y: 0},
+            {x: -20, y: -10},
+            {x: -20, y: 10}
+        ], {
+            id: 'arrow-head',
+            stroke: 'red',
+            strokeWidth: 3,
+            fill: 'red',
+            selectable: true,
+            hasControls: false,
+            top: pointer.y,
+            left: pointer.x,
+            originX: 'center',
+            originY: 'center'
+        });
+
+        canvas.add(line,arrowHead1);
+        canvas.renderAll();
+
+    }
+    
+    function startDrawingSingleArrowLine(o) {
+        if (mouseDown === true) {
+            let pointer = canvas.getPointer(o.e);
+        
+            line.set({
+                x2: pointer.x,
+                y2: pointer.y
+            });
+        
+            arrowHead1.set({
+                left: pointer.x,
+                top: pointer.y
+            });
+
+            let x1 = line.x1;
+            let y1 = line.y1;
+            let x2 = pointer.x;
+            let y2 = pointer.y;
+
+            let verticalHeight = Math.abs(y2 - y1);
+            let horizontalWidth = Math.abs(x2 - x1);
+
+            let tanRatio = verticalHeight / horizontalWidth;
+            let basicAngle = Math.atan(tanRatio)*180/Math.PI;
+
+            if (x2>x1) {
+                if (y2<y1) {
+                    arrowHead1.set({
+                        angle: -basicAngle
+                    });
+                }
+                else if(y2===y1) {
+                    arrowHead1.set({
+                        angle: 0
+                    });
+                }
+                else if(y2>y1) {
+                    arrowHead1.set({
+                        angle: basicAngle
+                    });
+                }
+            }else if (x2 < x1) {
+                if (y2 > y1) {
+                    arrowHead1.set({
+                        angle: 180 - basicAngle
+                    });
+                } else if (y2 === y1) {
+                    arrowHead1.set({
+                        angle: 180
+                    });
+                } else if (y2 < y1) {
+                    arrowHead1.set({
+                        angle: 180 + basicAngle
+                    });
+                }
+            }
+
+            line.setCoords();
+            arrowHead1.setCoords();
+            canvas.requestRenderAll();
+        }
+    }
+    
+    function stopDrawingSingleArrowLine() {
+
+        canvas.off('mouse:down', startAddingSingleArrowLine);
+        canvas.off('mouse:move', startDrawingSingleArrowLine);
+        canvas.off('mouse:up', stopDrawingSingleArrowLine);
+
+    }
 });
 
 
