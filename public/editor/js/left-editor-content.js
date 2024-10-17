@@ -556,21 +556,19 @@ $('#solid-arrow-line').click(function() {
 
         line = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
             id: 'added-single-arrow-line',
-            stroke: 'red',
-            strokeWidth: 3,
+            stroke: 'black',
+            strokeWidth: 2,
             selectable: true,
             hasControls: false
         });
 
         arrowHead1 = new fabric.Polygon([
             {x: 0, y: 0},
-            {x: -20, y: -10},
-            {x: -20, y: 10}
+            {x: -10, y: -5},
+            {x: -10, y: 5}
         ], {
             id: 'arrow-head',
-            stroke: 'red',
-            strokeWidth: 3,
-            fill: 'red',
+            fill: 'black',
             selectable: true,
             hasControls: false,
             top: pointer.y,
@@ -657,190 +655,327 @@ $('#solid-arrow-line').click(function() {
 });
 
 
-
-// Arrow Dash Line
-let isDrawingArrowDashLine;
-let ArrowDashLineMode;
+//add dash arrow manual
+let mouseDowndash = false;
+let arrowHead1dash;
 
 $('#dashed-arrow-line').click(function() {
-    ArrowDashLineMode = true;
-    let isEditing = false;
-    let activePoint = null;
-    let activeLine = null;
-    isDrawingArrowDashLine = true;
+
     let lineId = 0;
-    let arrowDashLines = [];
-    let isMoving = false; // Status apakah garis sedang dipindahkan
-    let offsetX, offsetY; // Untuk menyimpan offset pergerakan saat garis dipindahkan
 
-    // Mode edit garis (ubah kursor saat berada di mode edit)
-    function enterEditMode() {
-        document.body.style.cursor = 'crosshair'; // Ubah kursor saat mode edit
+    canvas.on({
+        'mouse:down': startAddingSingleArrowLinedashed,
+        'mouse:move': startDrawingSingleArrowLinedashed,
+        'mouse:up': stopDrawingSingleArrowLinedashed 
+    });
+    
+    function activateAddingSingleArrowLine() {
+        if (addingSingleArrowLineBtnClicked === false) {
+            addingSingleArrowLineBtnClicked = true;
+    
+            canvas.on({
+                'mouse:down': startAddingSingleArrowLine,
+                'mouse:move': startDrawingSingleArrowLine,
+                'mouse:up': stopDrawingSingleArrowLine 
+            });
+        }
     }
 
-    function exitEditMode() {
-        document.body.style.cursor = 'default'; // Kembalikan kursor normal
-    }
+    function startAddingSingleArrowLinedashed(o) {
 
-    // Fungsi untuk menghitung jarak antara titik dan garis
-    function distanceToLine(x, y, line) {
-        const A = line.y2 - line.y1;
-        const B = line.x1 - line.x2;
-        const C = line.x2 * line.y1 - line.x1 * line.y2;
-        return Math.abs(A * x + B * y + C) / Math.sqrt(A * A + B * B);
-    }
+        mouseDowndash = true;
 
-    // Fungsi untuk menggambar panah di ujung garis
-    function addArrow(line) {
-        let angle = Math.atan2(line.y2 - line.y1, line.x2 - line.x1); // Menghitung sudut panah
-        let arrowLength = 20; // Panjang panah
-        let arrowWidth = 10; // Lebar panah
+        let pointer = canvas.getPointer(o.e);
 
-        // Hitung koordinat untuk titik panah
-        let x3 = line.x2 - arrowLength * Math.cos(angle - Math.PI / 6);
-        let y3 = line.y2 - arrowLength * Math.sin(angle - Math.PI / 6);
-        let x4 = line.x2 - arrowLength * Math.cos(angle + Math.PI / 6);
-        let y4 = line.y2 - arrowLength * Math.sin(angle + Math.PI / 6);
-
-        // Buat panah sebagai segitiga
-        let arrow = new fabric.Polygon([ 
-            { x: line.x2, y: line.y2 },
-            { x: x3, y: y3 },
-            { x: x4, y: y4 }
-        ], {
-            fill: 'black',
-            selectable: false,
-            evented: false
+        line = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
+            id: `line_${lineId++}`,
+            stroke: 'black',
+            strokeWidth: 2,
+            strokeDashArray: [10, 5], // Dash pattern
+            selectable: true,
+            // evented: false,
+            lockScalingX: true, // Nonaktifkan scaling pada sumbu X
+            lockScalingY: true, // Nonaktifkan scaling pada sumbu Y
+            hasBorders: false, // Nonaktifkan border
         });
 
-        return arrow;
+        // line.push(line);
+
+
+        arrowHead1dash = new fabric.Polygon([
+            {x: 0, y: 0},
+            {x: -10, y: -5},
+            {x: -10, y: 5}
+        ], {
+            id: 'arrow-head',
+            fill: 'black',
+            selectable: true,
+            hasControls: false,
+            top: pointer.y,
+            left: pointer.x,
+            originX: 'center',
+            originY: 'center'
+        });
+
+        canvas.add(line,arrowHead1dash);
+        canvas.renderAll();
+
     }
+    
+    function startDrawingSingleArrowLinedashed(o) {
+        if (mouseDowndash === true) {
+            let pointer = canvas.getPointer(o.e);
+        
+            line.set({
+                x2: pointer.x,
+                y2: pointer.y
+            });
+        
+            arrowHead1dash.set({
+                left: pointer.x,
+                top: pointer.y
+            });
 
-    // Event listener untuk memulai gambar garis panah dashline atau memilih garis yang ada
-    canvas.on('mouse:down', function(opt) {
-        let pointer = canvas.getPointer(opt.e);
+            let x1 = line.x1;
+            let y1 = line.y1;
+            let x2 = pointer.x;
+            let y2 = pointer.y;
 
-        // Jika sedang tidak menggambar, periksa apakah pengguna mengklik garis yang ada
-        if (!isDrawingArrowDashLine) {
-            for (let i = 0; i < arrowDashLines.length; i++) {
-                let line = arrowDashLines[i].line;
-                let distanceToStart = Math.sqrt(Math.pow(pointer.x - line.x1, 2) + Math.pow(pointer.y - line.y1, 2));
-                let distanceToEnd = Math.sqrt(Math.pow(pointer.x - line.x2, 2) + Math.pow(pointer.y - line.y2, 2));
-                let distanceToLineBody = distanceToLine(pointer.x, pointer.y, line);
+            let verticalHeight = Math.abs(y2 - y1);
+            let horizontalWidth = Math.abs(x2 - x1);
 
-                // Jika klik dekat salah satu ujung garis, masuk ke mode edit
-                if (distanceToStart < 10) {
-                    isEditing = true;
-                    activePoint = 'start';
-                    activeLine = line;
-                    enterEditMode();
-                    return;
-                } else if (distanceToEnd < 10) {
-                    isEditing = true;
-                    activePoint = 'end';
-                    activeLine = line;
-                    enterEditMode();
-                    return;
-                } else if (distanceToLineBody < 10) { 
-                    // Jika klik dekat badan garis (tetapi tidak dekat dengan ujung)
-                    isMoving = true;
-                    activeLine = line;
-                    offsetX = pointer.x - line.left; // Hitung offset dari posisi garis ke klik
-                    offsetY = pointer.y - line.top;
-                    canvas.setActiveObject(line);
-                    enterEditMode();
-                    return;
+            let tanRatio = verticalHeight / horizontalWidth;
+            let basicAngle = Math.atan(tanRatio)*180/Math.PI;
+
+            if (x2>x1) {
+                if (y2<y1) {
+                    arrowHead1dash.set({
+                        angle: -basicAngle
+                    });
+                }
+                else if(y2===y1) {
+                    arrowHead1dash.set({
+                        angle: 0
+                    });
+                }
+                else if(y2>y1) {
+                    arrowHead1dash.set({
+                        angle: basicAngle
+                    });
+                }
+            }else if (x2 < x1) {
+                if (y2 > y1) {
+                    arrowHead1dash.set({
+                        angle: 180 - basicAngle
+                    });
+                } else if (y2 === y1) {
+                    arrowHead1dash.set({
+                        angle: 180
+                    });
+                } else if (y2 < y1) {
+                    arrowHead1dash.set({
+                        angle: 180 + basicAngle
+                    });
                 }
             }
+
+            line.setCoords();
+            arrowHead1dash.setCoords();
+            canvas.requestRenderAll();
         }
+    }
+    
+    function stopDrawingSingleArrowLinedashed() {
 
-        if (ArrowDashLineMode == true) {
-            // Buat objek garis baru dengan dashline dan panah
-            let dashedLine = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
-                id: `line_${lineId++}`,
-                stroke: 'black',
-                strokeWidth: 2,
-                strokeDashArray: [10, 5], // Dash pattern
-                selectable: false,
-                lockScalingX: true, // Nonaktifkan scaling pada sumbu X
-                lockScalingY: true, // Nonaktifkan scaling pada sumbu Y
-                hasBorders: false, // Nonaktifkan border
-            });
+        canvas.off('mouse:down', startAddingSingleArrowLinedashed);
+        canvas.off('mouse:move', startDrawingSingleArrowLinedashed);
+        canvas.off('mouse:up', stopDrawingSingleArrowLinedashed);
 
-            let arrow = addArrow(dashedLine); // Tambahkan panah di ujung
-
-            // Simpan garis dan panah
-            arrowDashLines.push({ line: dashedLine, arrow: arrow });
-
-            dashedLine.setControlVisible('tl', false);
-            dashedLine.setControlVisible('bl', false);
-            dashedLine.setControlVisible('tr', false);
-            dashedLine.setControlVisible('br', false);
-            dashedLine.setControlVisible('mt', false);
-            dashedLine.setControlVisible('mb', false);
-            dashedLine.setControlVisible('mtr', false);
-            dashedLine.setControlVisible('ml', false);
-            dashedLine.setControlVisible('mr', false);
-            canvas.add(dashedLine);
-            canvas.add(arrow);
-        }
-    });
-
-    // Event listener untuk memperbarui posisi garis dan panah selama proses menggambar, mengedit, atau memindahkan
-    canvas.on('mouse:move', function(opt) {
-        let pointer = canvas.getPointer(opt.e);
-
-        if (isDrawingArrowDashLine && arrowDashLines.length > 0) {
-            // Update titik akhir dari garis saat mouse bergerak
-            let lastLine = arrowDashLines[arrowDashLines.length - 1].line;
-            lastLine.set({ x2: pointer.x, y2: pointer.y });
-            let arrow = arrowDashLines[arrowDashLines.length - 1].arrow;
-
-            // Hapus panah sebelumnya dan tambahkan panah baru di ujung yang diperbarui
-            canvas.remove(arrow);
-            arrow = addArrow(lastLine);
-            arrowDashLines[arrowDashLines.length - 1].arrow = arrow;
-            canvas.add(arrow);
-
-            canvas.renderAll();
-        } else if (isEditing && activeLine) {
-            // Jika sedang mengedit titik awal atau akhir
-            if (activePoint === 'start') {
-                activeLine.set({ x1: pointer.x, y1: pointer.y });
-            } else if (activePoint === 'end') {
-                activeLine.set({ x2: pointer.x, y2: pointer.y });
-            }
-            canvas.renderAll();
-        } else if (isMoving && activeLine) {
-            // Jika sedang memindahkan garis
-            let newLeft = pointer.x - offsetX;
-            let newTop = pointer.y - offsetY;
-
-            // Pindahkan garis tanpa mengubah skala
-            let deltaX = newLeft - activeLine.left;
-            let deltaY = newTop - activeLine.top;
-            activeLine.set({
-                x1: activeLine.x1 + deltaX,
-                y1: activeLine.y1 + deltaY,
-                x2: activeLine.x2 + deltaX,
-                y2: activeLine.y2 + deltaY
-            });
-            activeLine.setCoords(); // Perbarui koordinat
-            canvas.renderAll();
-        }
-    });
-
-    // Event listener untuk menyelesaikan gambar garis, edit, atau pindah
-    canvas.on('mouse:up', function() {
-        isDrawingArrowDashLine = false;
-        isEditing = false;
-        isMoving = false;
-        activeLine = null;
-        activePoint = null;
-        exitEditMode();
-        canvas.renderAll();
-    });
+    }
 });
+// // Arrow Dash Line
+// let isDrawingArrowDashLine;
+// let ArrowDashLineMode;
+
+// $('#dashed-arrow-line').click(function() {
+//     ArrowDashLineMode = true;
+//     let isEditing = false;
+//     let activePoint = null;
+//     let activeLine = null;
+//     isDrawingArrowDashLine = true;
+//     let lineId = 0;
+//     let arrowDashLines = [];
+//     let isMoving = false; // Status apakah garis sedang dipindahkan
+//     let offsetX, offsetY; // Untuk menyimpan offset pergerakan saat garis dipindahkan
+
+//     // Mode edit garis (ubah kursor saat berada di mode edit)
+//     function enterEditMode() {
+//         document.body.style.cursor = 'crosshair'; // Ubah kursor saat mode edit
+//     }
+
+//     function exitEditMode() {
+//         document.body.style.cursor = 'default'; // Kembalikan kursor normal
+//     }
+
+//     // Fungsi untuk menghitung jarak antara titik dan garis
+//     function distanceToLine(x, y, line) {
+//         const A = line.y2 - line.y1;
+//         const B = line.x1 - line.x2;
+//         const C = line.x2 * line.y1 - line.x1 * line.y2;
+//         return Math.abs(A * x + B * y + C) / Math.sqrt(A * A + B * B);
+//     }
+
+//     // Fungsi untuk menggambar panah di ujung garis
+//     function addArrow(line) {
+//         let angle = Math.atan2(line.y2 - line.y1, line.x2 - line.x1); // Menghitung sudut panah
+//         let arrowLength = 20; // Panjang panah
+//         let arrowWidth = 10; // Lebar panah
+
+//         // Hitung koordinat untuk titik panah
+//         let x3 = line.x2 - arrowLength * Math.cos(angle - Math.PI / 6);
+//         let y3 = line.y2 - arrowLength * Math.sin(angle - Math.PI / 6);
+//         let x4 = line.x2 - arrowLength * Math.cos(angle + Math.PI / 6);
+//         let y4 = line.y2 - arrowLength * Math.sin(angle + Math.PI / 6);
+
+//         // Buat panah sebagai segitiga
+//         let arrow = new fabric.Polygon([ 
+//             { x: line.x2, y: line.y2 },
+//             { x: x3, y: y3 },
+//             { x: x4, y: y4 }
+//         ], {
+//             fill: 'black',
+//             selectable: false,
+//             evented: false
+//         });
+
+//         return arrow;
+//     }
+
+//     // Event listener untuk memulai gambar garis panah dashline atau memilih garis yang ada
+//     canvas.on('mouse:down', function(opt) {
+//         let pointer = canvas.getPointer(opt.e);
+
+//         // Jika sedang tidak menggambar, periksa apakah pengguna mengklik garis yang ada
+//         if (!isDrawingArrowDashLine) {
+//             for (let i = 0; i < arrowDashLines.length; i++) {
+//                 let line = arrowDashLines[i].line;
+//                 let distanceToStart = Math.sqrt(Math.pow(pointer.x - line.x1, 2) + Math.pow(pointer.y - line.y1, 2));
+//                 let distanceToEnd = Math.sqrt(Math.pow(pointer.x - line.x2, 2) + Math.pow(pointer.y - line.y2, 2));
+//                 let distanceToLineBody = distanceToLine(pointer.x, pointer.y, line);
+
+//                 // Jika klik dekat salah satu ujung garis, masuk ke mode edit
+//                 if (distanceToStart < 10) {
+//                     isEditing = true;
+//                     activePoint = 'start';
+//                     activeLine = line;
+//                     enterEditMode();
+//                     return;
+//                 } else if (distanceToEnd < 10) {
+//                     isEditing = true;
+//                     activePoint = 'end';
+//                     activeLine = line;
+//                     enterEditMode();
+//                     return;
+//                 } else if (distanceToLineBody < 10) { 
+//                     // Jika klik dekat badan garis (tetapi tidak dekat dengan ujung)
+//                     isMoving = true;
+//                     activeLine = line;
+//                     offsetX = pointer.x - line.left; // Hitung offset dari posisi garis ke klik
+//                     offsetY = pointer.y - line.top;
+//                     canvas.setActiveObject(line);
+//                     enterEditMode();
+//                     return;
+//                 }
+//             }
+//         }
+
+//         if (ArrowDashLineMode == true) {
+//             // Buat objek garis baru dengan dashline dan panah
+//             let dashedLine = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
+//                 id: `line_${lineId++}`,
+//                 stroke: 'black',
+//                 strokeWidth: 2,
+//                 strokeDashArray: [10, 5], // Dash pattern
+//                 selectable: false,
+//                 lockScalingX: true, // Nonaktifkan scaling pada sumbu X
+//                 lockScalingY: true, // Nonaktifkan scaling pada sumbu Y
+//                 hasBorders: false, // Nonaktifkan border
+//             });
+
+//             let arrow = addArrow(dashedLine); // Tambahkan panah di ujung
+
+//             // Simpan garis dan panah
+//             arrowDashLines.push({ line: dashedLine, arrow: arrow });
+
+//             dashedLine.setControlVisible('tl', false);
+//             dashedLine.setControlVisible('bl', false);
+//             dashedLine.setControlVisible('tr', false);
+//             dashedLine.setControlVisible('br', false);
+//             dashedLine.setControlVisible('mt', false);
+//             dashedLine.setControlVisible('mb', false);
+//             dashedLine.setControlVisible('mtr', false);
+//             dashedLine.setControlVisible('ml', false);
+//             dashedLine.setControlVisible('mr', false);
+//             canvas.add(dashedLine);
+//             canvas.add(arrow);
+//         }
+//     });
+
+//     // Event listener untuk memperbarui posisi garis dan panah selama proses menggambar, mengedit, atau memindahkan
+//     canvas.on('mouse:move', function(opt) {
+//         let pointer = canvas.getPointer(opt.e);
+
+//         if (isDrawingArrowDashLine && arrowDashLines.length > 0) {
+//             // Update titik akhir dari garis saat mouse bergerak
+//             let lastLine = arrowDashLines[arrowDashLines.length - 1].line;
+//             lastLine.set({ x2: pointer.x, y2: pointer.y });
+//             let arrow = arrowDashLines[arrowDashLines.length - 1].arrow;
+
+//             // Hapus panah sebelumnya dan tambahkan panah baru di ujung yang diperbarui
+//             canvas.remove(arrow);
+//             arrow = addArrow(lastLine);
+//             arrowDashLines[arrowDashLines.length - 1].arrow = arrow;
+//             canvas.add(arrow);
+
+//             canvas.renderAll();
+//         } else if (isEditing && activeLine) {
+//             // Jika sedang mengedit titik awal atau akhir
+//             if (activePoint === 'start') {
+//                 activeLine.set({ x1: pointer.x, y1: pointer.y });
+//             } else if (activePoint === 'end') {
+//                 activeLine.set({ x2: pointer.x, y2: pointer.y });
+//             }
+//             canvas.renderAll();
+//         } else if (isMoving && activeLine) {
+//             // Jika sedang memindahkan garis
+//             let newLeft = pointer.x - offsetX;
+//             let newTop = pointer.y - offsetY;
+
+//             // Pindahkan garis tanpa mengubah skala
+//             let deltaX = newLeft - activeLine.left;
+//             let deltaY = newTop - activeLine.top;
+//             activeLine.set({
+//                 x1: activeLine.x1 + deltaX,
+//                 y1: activeLine.y1 + deltaY,
+//                 x2: activeLine.x2 + deltaX,
+//                 y2: activeLine.y2 + deltaY
+//             });
+//             activeLine.setCoords(); // Perbarui koordinat
+//             canvas.renderAll();
+//         }
+//     });
+
+//     // Event listener untuk menyelesaikan gambar garis, edit, atau pindah
+//     canvas.on('mouse:up', function() {
+//         isDrawingArrowDashLine = false;
+//         isEditing = false;
+//         isMoving = false;
+//         activeLine = null;
+//         activePoint = null;
+//         exitEditMode();
+//         canvas.renderAll();
+//     });
+// });
 
 
 
