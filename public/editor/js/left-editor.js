@@ -133,6 +133,12 @@ document.addEventListener('click', function (event) {
     isDrawingDashLine = false;
     DashLineMode = false
 
+    isDrawingDottedLine = false;
+    DottedLineMode = false;
+
+    isDrawingArrowDashLine = false;
+    ArrowDashLineMode = false;
+
     });
   }
 });
