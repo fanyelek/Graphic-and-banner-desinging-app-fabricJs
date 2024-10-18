@@ -187,29 +187,130 @@ $('#add-polygon').click(function() {
 
 // solid-line
 $('#solid-line').click(function() {
+    
+    const canvasWidth = canvas.getWidth();
+    const canvasHeight = canvas.getHeight();
+    
+    // Menghitung titik tengah
+    const centerX = canvasWidth / 2;
+    const centerY = canvasHeight / 2;
+    // console.log("Titik tengah canvas: ", centerX, centerY);
+    // Variabel untuk ketebalan garis
+    const lineStroke = 2;
+
     // Membuat garis
-    let solidLine = new fabric.Line([50, 100, 250, 100], {
+    const solidLine = new fabric.Line([centerX - 100, centerY, centerX + 100, centerY], {
         stroke: 'black',
-        strokeWidth: 2,
-        hasControls: true,  // Aktifkan kontrol objek
-        lockScalingY: true, // Mengunci scaling di arah vertikal (Y)
-        lockMovementY: true // Mengunci pergerakan vertikal (Y)
+        strokeWidth: lineStroke,
+        selectable: true, // Membuat garis bisa dipilih
+        hasControls: false,
     });
 
-    // Menambahkan garis ke canvas
-    canvas.add(solidLine);
+    // Membuat marker (lingkaran) di ujung-ujung garis tetapi disembunyikan terlebih dahulu
+    const startMarker = new fabric.Circle({
+        left: centerX - 100, // Posisi ujung kiri garis
+        top: centerY + (lineStroke / 2), // Disesuaikan dengan stroke
+        radius: 6,
+        fill: null,
+        stroke: 'blue',
+        strokeWidth: 1,
+        originX: 'center',
+        originY: 'center',
+        visible: false, // Marker tidak terlihat awalnya
+        hasControls: false,
+        hasBorders: false,
+        // selectable: false,
+    });
 
-    // Nonaktifkan kontrol sudut, hanya memungkinkan kontrol di sisi-sisinya
-    solidLine.controls = fabric.Object.prototype.controls;
-    solidLine.setControlVisible('mt', false); // Nonaktifkan kontrol tengah atas
-    solidLine.setControlVisible('mb', false); // Nonaktifkan kontrol tengah bawah
-    solidLine.setControlVisible('tl', false); // Nonaktifkan kontrol sudut kiri atas
-    solidLine.setControlVisible('tr', false); // Nonaktifkan kontrol sudut kanan atas
-    solidLine.setControlVisible('bl', false); // Nonaktifkan kontrol sudut kiri bawah
-    solidLine.setControlVisible('br', false); // Nonaktifkan kontrol sudut kanan bawah
+    const endMarker = new fabric.Circle({
+        left: centerX + 100, // Posisi ujung kanan garis
+        top: centerY + (lineStroke / 2), // Disesuaikan dengan stroke
+        radius: 6,
+        fill: null,
+        stroke: 'blue',
+        strokeWidth: 1,
+        originX: 'center',
+        originY: 'center',
+        visible: false, // Marker tidak terlihat awalnya
+        hasControls: false,
+        hasBorders: false,
+        // selectable: false,
+    });
 
-    // Render ulang canvas untuk memastikan perubahan diterapkan
-    canvas.renderAll();
+    // Menambahkan garis dan marker ke canvas
+    canvas.add(solidLine, startMarker, endMarker);
+
+        // Nonaktifkan kontrol sudut, hanya memungkinkan kontrol di sisi-sisinya
+        solidLine.controls = fabric.Object.prototype.controls;
+        solidLine.setControlVisible('mt', false); // Nonaktifkan kontrol tengah atas
+        solidLine.setControlVisible('mb', false); // Nonaktifkan kontrol tengah bawah
+        solidLine.setControlVisible('tl', false); // Nonaktifkan kontrol sudut kiri atas
+        solidLine.setControlVisible('tr', false); // Nonaktifkan kontrol sudut kanan atas
+        solidLine.setControlVisible('bl', false); // Nonaktifkan kontrol sudut kiri bawah
+        solidLine.setControlVisible('br', false); // Nonaktifkan kontrol sudut kanan bawah
+        solidLine.setControlVisible('mtr', false); // Nonaktifkan kontrol sudut kanan bawah
+
+        // Render ulang canvas untuk memastikan perubahan diterapkan
+        canvas.renderAll();
+        // Event listener untuk menampilkan marker ketika garis dipilih
+    canvas.on('object:selected', function(event) {
+        if (event.target === solidLine) { // Memastikan bahwa garis yang dipilih
+            startMarker.set({ visible: true }); // Tampilkan marker
+            endMarker.set({ visible: true });
+        }
+        canvas.renderAll(); // Render ulang canvas untuk menampilkan perubahan
+    });
+
+
+    // Variabel untuk menyimpan koordinat sebelumnya
+    let previousLineCoords = solidLine.calcLinePoints();
+
+    let isThrottled = false; // Flag for throttling
+
+
+    function updateMarkers() {
+
+        // Ambil posisi baru dari titik awal dan akhir garis
+        const currentLineCoords = solidLine.calcLinePoints();
+        
+        // Hitung selisih antara koordinat x1 sebelum dan sesudah pergeseran
+        const deltaX1 = currentLineCoords.x1 - previousLineCoords.x1;
+        const deltaX2 = currentLineCoords.x2 + previousLineCoords.x2;
+        const deltaY1 = currentLineCoords.y1 - previousLineCoords.y1;
+
+        // Update posisi startMarker berdasarkan pergeseran horizontal dan vertikal
+        startMarker.set({
+            left: solidLine.left + deltaX1, // Sesuaikan dengan posisi absolute solidLine.left
+            top: solidLine.top + deltaY1   // Update posisi vertikal
+        });
+
+        // Update endMarker juga
+        endMarker.set({
+            left: solidLine.left + deltaX2, // Sesuaikan dengan posisi absolute solidLine.left
+            top: solidLine.top + currentLineCoords.y2    // Update posisi vertikal
+        });
+
+        // Simpan koordinat saat ini sebagai koordinat sebelumnya untuk langkah selanjutnya
+        previousLineCoords = currentLineCoords;
+
+        // Render ulang canvas untuk menampilkan perubahan
+        canvas.renderAll();
+
+    }
+    // Event listener ketika garis dipindahkan
+    solidLine.on('moving', function() {
+    
+        if (!isThrottled) {
+            updateMarkers();  // Panggil fungsi update marker
+            isThrottled = true;
+
+            // Set timeout untuk throttle, misalnya 30ms
+            setTimeout(function() {
+                isThrottled = false;
+            }, 0); // Frekuensi update bisa disesuaikan (30ms adalah contoh)
+        }
+
+    });
 });
 
 
@@ -256,7 +357,7 @@ $('#dashed-line').click(function() {
     
             // Jika sedang tidak menggambar, periksa apakah pengguna mengklik garis yang ada
             if (!isDrawingDashLine) {
-                // console.log('disini');
+
                 for (let i = 0; i < dashedLines.length; i++) {
                     let line = dashedLines[i];
                     let distanceToStart = Math.sqrt(Math.pow(pointer.x - line.x1, 2) + Math.pow(pointer.y - line.y1, 2));
@@ -270,12 +371,14 @@ $('#dashed-line').click(function() {
                         activeLine = line;
                         enterEditMode();
                         return;
+
                     } else if (distanceToEnd < 10) {
                         isEditing = true;
                         activePoint = 'end';
                         activeLine = line;
                         enterEditMode();
                         return;
+
                     } else if (distanceToLineBody < 10) { 
                         // Jika klik dekat badan garis (tetapi tidak dekat dengan ujung)
                         isMoving = true;
@@ -285,6 +388,7 @@ $('#dashed-line').click(function() {
                         canvas.setActiveObject(line);
                         enterEditMode();
                         return;
+
                     }
                 }
             }
@@ -300,11 +404,11 @@ $('#dashed-line').click(function() {
                     stroke: 'black',
                     strokeWidth: 2,
                     strokeDashArray: [10, 5], // Dash pattern
-                    selectable: false,
+                    // selectable: false,
                     // evented: false,
                     lockScalingX: true, // Nonaktifkan scaling pada sumbu X
                     lockScalingY: true, // Nonaktifkan scaling pada sumbu Y
-                    hasBorders: false, // Nonaktifkan border
+                    hasBorders: true, // Nonaktifkan border
                 });
         
                 dashedLines.push(dashedLine);
@@ -315,8 +419,8 @@ $('#dashed-line').click(function() {
                 dashedLine.setControlVisible('mt', false);
                 dashedLine.setControlVisible('mb', false);
                 dashedLine.setControlVisible('mtr', false);
-                dashedLine.setControlVisible('ml', false);
-                dashedLine.setControlVisible('mr', false);
+                // dashedLine.setControlVisible('ml', false);
+                // dashedLine.setControlVisible('mr', false);
                 canvas.add(dashedLine);
                 
             }
