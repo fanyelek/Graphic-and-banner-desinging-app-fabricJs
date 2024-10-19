@@ -185,211 +185,195 @@ $('#add-polygon').click(function() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-//Dash Line
-let isDrawingLine;
-let LineMode;
-
 // solid-line
+
+let isDraggingStart; // Flag untuk mengetahui apakah pangkal sedang diseret
+
 $('#solid-line').click(function() {
-    LineMode = true;
-    let isEditing = false;
-    let activePoint = null;
-    let activeLine = null;
-    isDrawingLine = true;
-    let lineId = 0;
-    let Lines = [];
-    let isMoving = false; // Status apakah garis sedang dipindahkan
-    let offsetX, offsetY; // Untuk menyimpan offset pergerakan saat garis dipindahkan
-
-    // Mode edit garis (ubah kursor saat berada di mode edit)
-    function enterEditMode() {
-        document.body.style.cursor = 'crosshair'; // Ubah kursor saat mode edit
-    }
-
-    function exitEditMode() {
-        document.body.style.cursor = 'default'; // Kembalikan kursor normal
-    }
-
-    // Fungsi untuk menghitung jarak antara titik dan garis
-    function distanceToLine(x, y, line) {
-        const A = line.y2 - line.y1;
-        const B = line.x1 - line.x2;
-        const C = line.x2 * line.y1 - line.x1 * line.y2;
-        return Math.abs(A * x + B * y + C) / Math.sqrt(A * A + B * B);
-    }
-
-    // Event listener untuk memulai gambar garis manual atau memilih garis yang ada
     
-        canvas.on('mouse:down', function(opt) {
-            let pointer = canvas.getPointer(opt.e);
+    const canvasWidth = canvas.getWidth();
+    const canvasHeight = canvas.getHeight();
     
-            // Jika sedang tidak menggambar, periksa apakah pengguna mengklik garis yang ada
-            if (!isDrawingLine) {
+    // Menghitung titik tengah
+    const centerX = canvasWidth / 2;
+    const centerY = canvasHeight / 2;
+    // console.log("Titik tengah canvas: ", centerX, centerY);
+    // Variabel untuk ketebalan garis
+    const lineStroke = 2;
 
-                for (let i = 0; i < Lines.length; i++) {
-                    let line = Lines[i];
-                    let distanceToStart = Math.sqrt(Math.pow(pointer.x - line.x1, 2) + Math.pow(pointer.y - line.y1, 2));
-                    let distanceToEnd = Math.sqrt(Math.pow(pointer.x - line.x2, 2) + Math.pow(pointer.y - line.y2, 2));
-                    let distanceToLineBody = distanceToLine(pointer.x, pointer.y, line);
-    
-                    // Jika klik dekat salah satu ujung garis, masuk ke mode edit
-                    if (distanceToStart < 10) {
-                        isEditing = true;
-                        activePoint = 'start';
-                        activeLine = line;
-                        enterEditMode();
-                        return;
+    // Membuat garis
+    const solidLine = new fabric.Line([centerX - 100, centerY, centerX + 100, centerY], {
+        stroke: 'black',
+        strokeWidth: lineStroke,
+        selectable: true, // Membuat garis bisa dipilih
+        hasControls: false,
+        lockMovementY: true, // Mengunci pergerakan vertikal
+        lockMovementX: true, // Mengunci pergerakan 
+    });
 
-                    } else if (distanceToEnd < 10) {
-                        isEditing = true;
-                        activePoint = 'end';
-                        activeLine = line;
-                        enterEditMode();
-                        return;
+    // Membuat marker (lingkaran) di ujung-ujung garis tetapi disembunyikan terlebih dahulu
+    const startMarker = new fabric.Circle({
+        left: centerX - 100, // Posisi ujung kiri garis
+        top: centerY + (lineStroke / 2), // Disesuaikan dengan stroke
+        radius: 6,
+        fill: null,
+        stroke: 'blue',
+        strokeWidth: 1,
+        originX: 'center',
+        originY: 'center',
+        visible: false, // Marker tidak terlihat awalnya
+        hasControls: false,
+        hasBorders: false,
+        // selectable: false,
+    });
 
-                    } else if (distanceToLineBody < 10) { 
-                        // Jika klik dekat badan garis (tetapi tidak dekat dengan ujung)
-                        isMoving = true;
-                        activeLine = line;
-                        offsetX = pointer.x - line.left; // Hitung offset dari posisi garis ke klik
-                        offsetY = pointer.y - line.top;
-                        canvas.setActiveObject(line);
-                        enterEditMode();
-                        return;
+    const endMarker = new fabric.Circle({
+        left: centerX + 100, // Posisi ujung kanan garis
+        top: centerY + (lineStroke / 2), // Disesuaikan dengan stroke
+        radius: 6,
+        fill: null,
+        stroke: 'blue',
+        strokeWidth: 1,
+        originX: 'center',
+        originY: 'center',
+        visible: false, // Marker tidak terlihat awalnya
+        hasControls: false,
+        hasBorders: false,
+        // selectable: false,
+    });
 
-                    }
-                }
-            }
+    // Menambahkan garis dan marker ke canvas
+    canvas.add(solidLine, startMarker, endMarker);
 
-            if(LineMode == true){
+        // Nonaktifkan kontrol sudut, hanya memungkinkan kontrol di sisi-sisinya
+        solidLine.controls = fabric.Object.prototype.controls;
+        solidLine.setControlVisible('mt', false); // Nonaktifkan kontrol tengah atas
+        solidLine.setControlVisible('mb', false); // Nonaktifkan kontrol tengah bawah
+        solidLine.setControlVisible('tl', false); // Nonaktifkan kontrol sudut kiri atas
+        solidLine.setControlVisible('tr', false); // Nonaktifkan kontrol sudut kanan atas
+        solidLine.setControlVisible('bl', false); // Nonaktifkan kontrol sudut kiri bawah
+        solidLine.setControlVisible('br', false); // Nonaktifkan kontrol sudut kanan bawah
+        solidLine.setControlVisible('mtr', false); // Nonaktifkan kontrol sudut kanan bawah
+
+        // Render ulang canvas untuk memastikan perubahan diterapkan
+        canvas.renderAll();
+        // Event listener untuk menampilkan marker ketika garis dipilih
+    canvas.on('object:selected', function(event) {
+        if (event.target === solidLine) { // Memastikan bahwa garis yang dipilih
+            // startMarker.set({ visible: true }); // Tampilkan marker
+            // endMarker.set({ visible: true });
+        }
+        canvas.renderAll(); // Render ulang canvas untuk menampilkan perubahan
+    });
+
+
+    // Variabel untuk menyimpan koordinat sebelumnya
+    let previousLineCoords = solidLine.calcLinePoints();
+
+    let isThrottled = false; // Flag for throttling
+
+
+    function updateMarkers() {
+
+        // Ambil posisi baru dari titik awal dan akhir garis
+        const currentLineCoords = solidLine.calcLinePoints();
         
-                // Jika tidak ada garis yang dipilih, mulai gambar garis baru
-                // isDrawingDashLine = true;
-        
-                // Buat objek garis baru
-                let Line = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
-                    id: `line_${lineId++}`,
-                    stroke: 'black',
-                    strokeWidth: 2,
-                });
-        
-                Lines.push(Line);
-                Line.setControlVisible('tl', false);
-                Line.setControlVisible('bl', false);
-                Line.setControlVisible('tr', false);
-                Line.setControlVisible('br', false);
-                Line.setControlVisible('mt', false);
-                Line.setControlVisible('mb', false);
-                Line.setControlVisible('mtr', false);
-                // dashedLine.setControlVisible('ml', false);
-                // dashedLine.setControlVisible('mr', false);
-                canvas.add(Line);
-                
-            }
+        // Hitung selisih antara koordinat x1 sebelum dan sesudah pergeseran
+        const deltaX1 = currentLineCoords.x1 - previousLineCoords.x1;
+        const deltaX2 = currentLineCoords.x2 + previousLineCoords.x2;
+        const deltaY1 = currentLineCoords.y1 - previousLineCoords.y1;
+
+        // Update posisi startMarker berdasarkan pergeseran horizontal dan vertikal
+        startMarker.set({
+            left: solidLine.left + deltaX1, // Sesuaikan dengan posisi absolute solidLine.left
+            top: solidLine.top + deltaY1   // Update posisi vertikal
         });
 
-    // Event listener untuk memperbarui posisi garis selama proses menggambar, mengedit, atau memindahkan
-    canvas.on('mouse:move', function(opt) {
-        // console.log(DashLineMode);
-        let pointer = canvas.getPointer(opt.e);
+        // Update endMarker juga
+        endMarker.set({
+            left: solidLine.left + deltaX2, // Sesuaikan dengan posisi absolute solidLine.left
+            top: solidLine.top + currentLineCoords.y2    // Update posisi vertikal
+        });
 
-        if (isDrawingLine && Lines.length > 0) {
-            // Update titik akhir dari garis saat mouse bergerak
-            let lastLine = Lines[Lines.length - 1];
-            lastLine.set({ x2: pointer.x, y2: pointer.y });
-            canvas.renderAll();
-        } else if (isEditing && activeLine) {
-            // Jika sedang mengedit titik awal atau akhir
-            if (activePoint === 'start') {
-                activeLine.set({ x1: pointer.x, y1: pointer.y });
-            } else if (activePoint === 'end') {
-                activeLine.set({ x2: pointer.x, y2: pointer.y });
-            }
-            canvas.renderAll();
-        } else if (isMoving && activeLine) {
-            // Jika sedang memindahkan garis
-            let newLeft = pointer.x - offsetX;
-            let newTop = pointer.y - offsetY;
+        // Simpan koordinat saat ini sebagai koordinat sebelumnya untuk langkah selanjutnya
+        previousLineCoords = currentLineCoords;
 
-            // Pindahkan garis tanpa mengubah skala
-            let deltaX = newLeft - activeLine.left;
-            let deltaY = newTop - activeLine.top;
-            activeLine.set({
-                x1: activeLine.x1 + deltaX,
-                y1: activeLine.y1 + deltaY,
-                x2: activeLine.x2 + deltaX,
-                y2: activeLine.y2 + deltaY
-            });
-            activeLine.setCoords(); // Perbarui koordinat
-            canvas.renderAll();
+        // Render ulang canvas untuk menampilkan perubahan
+        canvas.renderAll();
+
+    }
+    // Event listener ketika garis dipindahkan
+    solidLine.on('moving', function() {
+    
+        if (!isThrottled) {
+            updateMarkers();  // Panggil fungsi update marker
+            isThrottled = true;
+
+            // Set timeout untuk throttle, misalnya 30ms
+            setTimeout(function() {
+                isThrottled = false;
+            }, 0); // Frekuensi update bisa disesuaikan (30ms adalah contoh)
+        }
+
+    });
+
+
+    
+
+    // Event listener untuk mendeteksi klik dekat x1, y1
+    canvas.on('mouse:down', function(event) {
+        if (canvas.getActiveObject() === solidLine) {
+            // console.log('disini');
+            // Ambil posisi mouse
+            const pointer = canvas.getPointer(event.e);
+            const distanceToStart = Math.sqrt(Math.pow(pointer.x - solidLine.left + solidLine.calcLinePoints().x1, 2) + Math.pow(pointer.y - solidLine.top + solidLine.calcLinePoints().y1, 2));
+            console.log('klik ' + isDraggingStart);
+            console.log(distanceToStart);
+
+            // Jika klik dekat pangkal garis (x1, y1)
+            // if (distanceToStart < 10) { // 10 adalah jarak toleransi
+                isDraggingStart = true; // Set flag untuk menyeret pangkal
+            // }
         }
     });
 
-    // Event listener untuk menyelesaikan gambar garis, edit, atau pindah
-    canvas.on('mouse:up', function() {
-        isDrawingLine = false;
-        isEditing = false;
-        isMoving = false;
-        activeLine = null;
-        activePoint = null;
-        LineMode = false;
-        exitEditMode();
+// Event listener untuk mengupdate posisi garis saat mouse bergerak
+canvas.on('mouse:move', function(event) {
+    // console.log(isDraggingStart);
+    if (isDraggingStart) {
+        // console.log('disini');
+        // Ambil posisi mouse
+        const pointer = canvas.getPointer(event.e);
+
+        // Update posisi pangkal garis (x1, y1)
+        solidLine.set({
+            x1: pointer.x - solidLine.left, // Ubah x1 sesuai posisi mouse
+            y1: pointer.y - solidLine.top   // Ubah y1 sesuai posisi mouse
+        });
+
+        // Update marker pangkal
+        startMarker.set({
+            left: pointer.x,
+            top: pointer.y
+        });
+
+        // Render ulang canvas
         canvas.renderAll();
-    });
+    }
+});
+
+// Event listener untuk menetapkan posisi baru pangkal garis saat mouse dilepas
+canvas.on('mouse:up', function() {
+    if (isDraggingStart) {
+        isDraggingStart = false; // Reset flag saat mouse dilepas
+        // Koordinat baru x1, y1 sudah tersimpan pada solidLine
+    }
 });
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+});
 
 
 
