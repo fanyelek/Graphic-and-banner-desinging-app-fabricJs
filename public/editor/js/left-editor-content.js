@@ -23,7 +23,14 @@
       left: 100,
       top: 100,
       objecttype: 'text',
-      lockUniScaling: true // Ensure uniform scaling
+      lockUniScaling: true, // Ensure uniform scaling
+      // Control styles
+      borderColor: '#0C8CE9',       // Border color around the object
+      cornerColor: 'white',         // Corner control fill color (white)
+      cornerStrokeColor: '#0C8CE9', // Border color for corner controls (blue)
+      cornerStyle: 'circle',        // Make corners circular
+      cornerSize: 10,               // Size of the corner controls
+      transparentCorners: false,    // Ensure corners are not transparent
     })
     canvas.add(text)
   })
@@ -366,7 +373,15 @@ $(document).ready(function() {
                     originX: 'center',
                     originY: 'center',
                     hasBorders: false,
-                    hasControls: false
+                    hasControls: false,
+                    shadow: {
+                        color: 'rgba(0, 0, 0, 0.2)',  // Hitam dengan opacity 20%
+                        blur: 2,                      // Blur 2
+                        offsetX: 0,                   // Posisi X: 0
+                        offsetY: 0                    // Posisi Y: 0
+                    },
+                    stroke: '#C8C8C8',   // Warna stroke #C8C8C8
+                    strokeWidth: 1       // Ketebalan stroke 1px
                 });
         
                 let pointer2 = new fabric.Circle({
@@ -379,7 +394,15 @@ $(document).ready(function() {
                     originX: 'center',
                     originY: 'center',
                     hasBorders: false,
-                    hasControls: false
+                    hasControls: false,
+                    shadow: {
+                        color: 'rgba(0, 0, 0, 0.2)',  // Hitam dengan opacity 20%
+                        blur: 2,                      // Blur 2
+                        offsetX: 0,                   // Posisi X: 0
+                        offsetY: 0                    // Posisi Y: 0
+                    },
+                    stroke: '#C8C8C8',   // Warna stroke #C8C8C8
+                    strokeWidth: 1       // Ketebalan stroke 1px
                 });
         
                 canvas.add(pointer1,pointer2);
@@ -598,27 +621,41 @@ $(document).ready(function(){
                 let pointer1 = new fabric.Circle({
                     id: 'pointer1',
                     radius: obj.strokeWidth*2.5,
-                    fill: 'blue',
-                    opacity: 0.5,
+                    fill: 'white',
                     top: obj.y1,
                     left: obj.x1,
                     originX: 'center',
                     originY: 'center',
                     hasBorders: false,
-                    hasControls: false
+                    hasControls: false,
+                    shadow: {
+                        color: 'rgba(0, 0, 0, 0.2)',  // Hitam dengan opacity 20%
+                        blur: 2,                      // Blur 2
+                        offsetX: 0,                   // Posisi X: 0
+                        offsetY: 0                    // Posisi Y: 0
+                    },
+                    stroke: '#C8C8C8',   // Warna stroke #C8C8C8
+                    strokeWidth: 1       // Ketebalan stroke 1px
                 });
         
                 let pointer2 = new fabric.Circle({
                     id: 'pointer2',
                     radius: obj.strokeWidth *2.5,
-                    fill: 'blue',
-                    opacity: 0.5,
+                    fill: 'white',
                     top: obj.y2,
                     left: obj.x2,
                     originX: 'center',
                     originY: 'center',
                     hasBorders: false,
-                    hasControls: false
+                    hasControls: false,
+                    shadow: {
+                        color: 'rgba(0, 0, 0, 0.2)',  // Hitam dengan opacity 20%
+                        blur: 1,                      // Blur 2
+                        offsetX: 0,                   // Posisi X: 0
+                        offsetY: 0                    // Posisi Y: 0
+                    },
+                    stroke: '#C8C8C8',   // Warna stroke #C8C8C8
+                    strokeWidth: 1       // Ketebalan stroke 1px
                 });
         
                 canvas.add(pointer1,pointer2);
