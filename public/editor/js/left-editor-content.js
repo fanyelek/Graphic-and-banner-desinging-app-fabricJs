@@ -258,7 +258,8 @@ function startAddingLine(o){
         id: 'solid-line',
         stroke: 'red',
         strokeWidth: 3,
-        hasControls: false
+        hasControls: false,
+        borderColor: '#0C8CE9',       // Border color around the object
     });
 
     canvas.add(line);
@@ -539,7 +540,8 @@ function StartAddingDashLine(o){
         stroke: 'red',
         strokeWidth: 3,
         strokeDashArray: [10, 5],
-        hasControls: false
+        hasControls: false,
+        borderColor: '#0C8CE9',       // Border color around the object
     });
 
     canvas.add(DashLine);
@@ -755,6 +757,692 @@ $(document).ready(function(){
             let y2offset =  obj.calcLinePoints().y2;
 
             NewDashLineCoords = {
+                x1: centerX+x1offset-obj.strokeWidth/2,
+                y1: centerY+y1offset-obj.strokeWidth/2,
+                x2: centerX+x2offset-obj.strokeWidth/2,
+                y2: centerY+y2offset-obj.strokeWidth/2,
+            }
+
+            obj.set({
+                x1: centerX+x1offset-obj.strokeWidth/2,
+                y1: centerY+y1offset-obj.strokeWidth/2,
+                x2: centerX+x2offset-obj.strokeWidth/2,
+                y2: centerY+y2offset-obj.strokeWidth/2,
+            });
+            obj.setCoords();
+        }
+    }
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ====================================================================================
+// ====================                                        ========================
+// ====================            ADDING DOTTED LINE            ========================
+// ====================                                        ========================
+// ====================================================================================
+
+
+// Dotted-line
+let AddingDottedLineBtn = document.getElementById('dotted-line');
+
+AddingDottedLineBtn.addEventListener('click', activateAddingDottedline);
+
+function activateAddingDottedline(){
+    canvas.defaultCursor = 'crosshair';
+    
+    canvas.on('mouse:down', StartAddingDottedLine);
+    canvas.on('mouse:move', StartDrawingDottedLine);
+    canvas.on('mouse:up', StopAddingDottedLine);
+
+    canvas.discardActiveObject();
+    canvas.renderAll();
+    canvas.selection = false;
+
+    canvas.getObjects().forEach(o => {
+        if(o.id==='Dotted-line'){
+
+            if (!o.prevHoverCursor) {
+                o.prevHoverCursor = canvas.defaultCursor || 'default';  // Simpan nilai hoverCursor saat ini atau gunakan 'default' jika tidak ada
+            }
+
+            o.set({
+                selectable: false,
+                hoverCursor: o.prevHoverCursor
+            })
+        }
+    });
+
+}
+
+
+let DottedLine;
+let MouseDownDottedLine = false;
+function StartAddingDottedLine(o){
+    MouseDownDottedLine = true;
+    let pointer = canvas.getPointer(o.e);
+
+    DottedLine = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y],{
+        id: 'Dotted-line',
+        stroke: 'red',
+        strokeWidth: 3,
+        strokeDashArray: [3, 5],
+        hasControls: false,
+        borderColor: '#0C8CE9',       // Border color around the object
+    });
+
+    canvas.add(DottedLine);
+    canvas.requestRenderAll();
+}
+
+
+
+function StartDrawingDottedLine(o){
+
+    if(MouseDownDottedLine === true){
+
+        let pointer = canvas.getPointer(o.e);
+    
+        DottedLine.set({
+    
+            x2: pointer.x,
+            y2: pointer.y
+        });
+
+        canvas.requestRenderAll();
+
+    }
+}
+
+
+
+function StopAddingDottedLine(){
+    canvas.defaultCursor = 'default';
+
+    canvas.getObjects().forEach(o => {
+        if(o.id==='Dotted-line'){
+
+            if(!o.prehoverCursor){
+                o.prehoverCursor = 'all-scroll';
+            }
+
+            o.set({
+                selectable: true,
+                hoverCursor: o.prehoverCursor
+            })
+        }
+    });
+
+    MouseDownDottedLine = false;
+
+    canvas.off('mouse:down', StartAddingDottedLine);
+    canvas.off('mouse:move', StartDrawingDottedLine);
+    canvas.off('mouse:up', StopAddingDottedLine);
+
+    DottedLine.setCoords();
+    canvas.selection = true;
+
+    
+    canvas.defaultCursor = 'auto';
+
+}
+
+$(document).ready(function(){
+
+    canvas.on({
+        'mouse:dblclick': addingDottedLineControlPoints,
+        'object:moved': updateNewDottedLineCoordinates,
+    });
+
+    function addingDottedLineControlPoints(o){
+        let obj = o.target;
+        if(!obj){
+            
+            return;
+
+        } else { 
+            if (obj.id==='Dotted-line'){
+                
+                obj.set({
+                    label: 'selected-line',
+                });
+
+                let pointer1 = new fabric.Circle({
+                    id: 'pointer1',
+                    radius: obj.strokeWidth*2.5,
+                    fill: 'white',
+                    top: obj.y1,
+                    left: obj.x1,
+                    originX: 'center',
+                    originY: 'center',
+                    hasBorders: false,
+                    hasControls: false,
+                    shadow: {
+                        color: 'rgba(0, 0, 0, 0.2)',  // Hitam dengan opacity 20%
+                        blur: 2,                      // Blur 2
+                        offsetX: 0,                   // Posisi X: 0
+                        offsetY: 0                    // Posisi Y: 0
+                    },
+                    stroke: '#C8C8C8',   // Warna stroke #C8C8C8
+                    strokeWidth: 1       // Ketebalan stroke 1px
+                });
+        
+                let pointer2 = new fabric.Circle({
+                    id: 'pointer2',
+                    radius: obj.strokeWidth *2.5,
+                    fill: 'white',
+                    top: obj.y2,
+                    left: obj.x2,
+                    originX: 'center',
+                    originY: 'center',
+                    hasBorders: false,
+                    hasControls: false,
+                    shadow: {
+                        color: 'rgba(0, 0, 0, 0.2)',  // Hitam dengan opacity 20%
+                        blur: 1,                      // Blur 2
+                        offsetX: 0,                   // Posisi X: 0
+                        offsetY: 0                    // Posisi Y: 0
+                    },
+                    stroke: '#C8C8C8',   // Warna stroke #C8C8C8
+                    strokeWidth: 1       // Ketebalan stroke 1px
+                });
+        
+                canvas.add(pointer1,pointer2);
+                canvas.setActiveObject(pointer2);
+                canvas.requestRenderAll();
+
+                canvas.on({
+                    'object:moving': endPointOfDottedLineToFollowPointer,
+                    'selection:cleared': removeDottedLinePointersOnSelectionCleared,
+                    'selection:updated': removeDottedLinePointersOnSelectionUpdated
+                });
+            } 
+        }  
+    }
+
+
+    function endPointOfDottedLineToFollowPointer(o){
+        
+        let obj = o.target;
+
+        if(obj.id==='pointer1'){
+            canvas.getObjects().forEach(o =>{
+                if(o.id==='Dotted-line' && o.label==='selected-line'){
+                    o.set({
+                    x1: obj.left,
+                    y1: obj.top
+                });
+                o.setCoords();
+                }
+            });
+        } else if(obj.id==='pointer2'){
+            canvas.getObjects().forEach(o =>{
+                if(o.id==='Dotted-line' && o.label==='selected-line'){
+                    o.set({
+                        x2: obj.left,
+                        y2: obj.top
+                    });
+                    o.setCoords();
+                }
+            });
+        } 
+
+    }
+
+
+    function removeDottedLinePointersOnSelectionCleared(o){
+
+        let pointersToRemove = [];
+
+        canvas.getObjects().forEach(o => {
+            if(o.id==='pointer1' || o.id==='pointer2'){
+                pointersToRemove.push(o);
+            }
+    
+            if(o.label === 'selected-line'){
+                
+                o.set({
+                    label: '',
+                });
+            }
+        });
+
+        pointersToRemove.forEach(pointer => {
+            canvas.remove(pointer);
+        });
+        
+        canvas.requestRenderAll();
+
+    }
+
+
+    function removeDottedLinePointersOnSelectionUpdated(o){
+
+        let obj = o.target;
+
+        if(obj.id === 'Dotted-line'){
+            removeDottedLinePointersOnSelectionCleared();
+        }
+
+    }
+
+
+    let NewDottedLineCoords = {};
+
+    function updateNewDottedLineCoordinates(o){
+        
+        NewDottedLineCoords = {};
+        let obj = o.target;
+        
+        if (obj.id==='Dotted-line'){
+            let centerX =  obj.getCenterPoint().x;
+            let centerY =  obj.getCenterPoint().y;
+
+            let x1offset =  obj.calcLinePoints().x1;
+            let y1offset =  obj.calcLinePoints().y1;
+            let x2offset =  obj.calcLinePoints().x2;
+            let y2offset =  obj.calcLinePoints().y2;
+
+            NewDottedLineCoords = {
+                x1: centerX+x1offset-obj.strokeWidth/2,
+                y1: centerY+y1offset-obj.strokeWidth/2,
+                x2: centerX+x2offset-obj.strokeWidth/2,
+                y2: centerY+y2offset-obj.strokeWidth/2,
+            }
+
+            obj.set({
+                x1: centerX+x1offset-obj.strokeWidth/2,
+                y1: centerY+y1offset-obj.strokeWidth/2,
+                x2: centerX+x2offset-obj.strokeWidth/2,
+                y2: centerY+y2offset-obj.strokeWidth/2,
+            });
+            obj.setCoords();
+        }
+    }
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ==========================================================================================
+// ====================                                              ========================
+// ====================           ADDING SOLID ARROW LINE            ========================
+// ====================                                              ========================
+// ==========================================================================================
+
+
+
+let AddingArrowBtn = document.getElementById('solid-Arrow');
+
+AddingArrowBtn.addEventListener('click', activateAddingArrow);
+
+function activateAddingArrow(){
+
+    canvas.on({
+        'mouse:down': StartAddingArrowLine,
+        'mouse:move': StartDrawingArrowLine,
+        'mouse:up': StopAddingArrowLine,
+    });
+
+    canvas.selection = false;
+
+    canvas.getObjects().forEach(o => {
+        if(o.id){
+
+            if (!o.prevHoverCursor) {
+                o.prevHoverCursor = canvas.defaultCursor || 'default';  // Simpan nilai hoverCursor saat ini atau gunakan 'default' jika tidak ada
+            }
+
+            o.set({
+                selectable: false,
+                hoverCursor: o.prevHoverCursor
+            })
+        }
+    });
+
+}
+
+let MouseDownArrowLine;
+let ArrowLine = false;
+let ArrowHead1;
+
+function StartAddingArrowLine(o){
+    
+    MouseDownArrowLine = true;
+    let pointer = canvas.getPointer(o.e);
+
+    ArrowLine = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y],{
+        id: 'arrow-line',
+        stroke: 'red',
+        strokeWidth: 3,
+        hasControls: false,
+        borderColor: '#0C8CE9',       // Border color around the object
+    });
+
+    ArrowHead1 = new fabric.Polygon([
+        {x: 0, y: 0},
+        {x: -20, y: -10},
+        {x: -20, y: 10}
+    ], {
+        id: 'arrow-head',
+        fill: 'red',
+        selectable: true,
+        hasControls: false,
+        top: pointer.y,
+        left: pointer.x,
+        originX: 'center',
+        originY: 'center'
+    });
+
+    canvas.add(ArrowLine,ArrowHead1);
+    canvas.requestRenderAll();
+
+}
+
+function StartDrawingArrowLine(o){
+
+    if(MouseDownArrowLine === true){
+
+        let pointer = canvas.getPointer(o.e);
+    
+        ArrowLine.set({
+    
+            x2: pointer.x,
+            y2: pointer.y
+
+        });
+
+        ArrowHead1.set({
+            left: pointer.x,
+            top: pointer.y
+        });
+
+            let x1 = ArrowLine.x1;
+            let y1 = ArrowLine.y1;
+            let x2 = pointer.x;
+            let y2 = pointer.y;
+
+            let verticalHeight = Math.abs(y2 - y1);
+            let horizontalWidth = Math.abs(x2 - x1);
+
+            let tanRatio = verticalHeight / horizontalWidth;
+            let basicAngle = Math.atan(tanRatio)*180/Math.PI;
+
+            if (x2>x1) {
+                if (y2<y1) {
+                    ArrowHead1.set({
+                        angle: -basicAngle
+                    });
+                }
+                else if(y2===y1) {
+                    ArrowHead1.set({
+                        angle: 0
+                    });
+                }
+                else if(y2>y1) {
+                    ArrowHead1.set({
+                        angle: basicAngle
+                    });
+                }
+            }else if (x2 < x1) {
+                if (y2 > y1) {
+                    ArrowHead1.set({
+                        angle: 180 - basicAngle
+                    });
+                } else if (y2 === y1) {
+                    ArrowHead1.set({
+                        angle: 180
+                    });
+                } else if (y2 < y1) {
+                    ArrowHead1.set({
+                        angle: 180 + basicAngle
+                    });
+                }
+            }
+        
+        ArrowLine.setCoords();
+        ArrowHead1.setCoords();
+        canvas.requestRenderAll();
+
+    }
+
+}
+
+function StopAddingArrowLine(){
+    canvas.defaultCursor = 'default';
+
+    // Membuat grup dari ArrowLine dan ArrowHead1
+    let arrowGroup = new fabric.Group([ArrowLine, ArrowHead1], {
+        id: 'arrow-solid',
+        selectable: true,  // Mengatur grup agar bisa dipilih
+        hasControls: true  // Menyediakan kontrol untuk mengatur grup
+    });
+
+    // Hapus objek individual dari canvas
+    canvas.remove(ArrowLine);
+    canvas.remove(ArrowHead1);
+
+    // Tambahkan grup ke canvas
+    canvas.add(arrowGroup);
+
+    canvas.getObjects().forEach(o => {
+        if(o.id){
+            if(!o.prehoverCursor){
+                o.prehoverCursor = 'all-scroll';
+            }
+
+            o.set({
+                selectable: true,
+                hoverCursor: o.prehoverCursor
+            });
+        }
+    });
+
+    MouseDownArrowLine = false;
+
+    canvas.off('mouse:down', StartAddingArrowLine);
+    canvas.off('mouse:move', StartDrawingArrowLine);
+    canvas.off('mouse:up', StopAddingArrowLine);
+
+    // Setelah grup ditambahkan, pastikan koordinat diperbarui
+    arrowGroup.setCoords();
+    canvas.selection = true;
+
+    canvas.defaultCursor = 'auto';
+    canvas.requestRenderAll();
+    // console.log(canvas.getObjects());
+}
+
+$(document).ready(function(){
+
+    canvas.on({
+        'mouse:dblclick': addingArrowSolidControlPoints,
+        // 'object:moved': updateArrowSolidCoordinates,
+    });
+
+    function addingArrowSolidControlPoints(o){
+        let obj = o.target;
+        
+        if(!obj){
+            
+            return;
+            
+        } else { 
+            if (obj.id==='arrow-solid'){
+                
+                obj.set({
+                    label: 'selected-line',
+                });
+                // console.log(obj._objects[1].points[1].x);
+
+                let pointer1 = new fabric.Circle({
+                    id: 'pointer1',
+                    radius: obj._objects[0].strokeWidth*2.5,
+                    fill: 'white',
+                    top: obj._objects[0].y1+obj._objects[0].strokeWidth/2,
+                    left: obj._objects[0].x1+obj._objects[0].strokeWidth/2,
+                    originX: 'center',
+                    originY: 'center',
+                    hasBorders: false,
+                    hasControls: false,
+                    shadow: {
+                        color: 'rgba(0, 0, 0, 0.2)',  // Hitam dengan opacity 20%
+                        blur: 2,                      // Blur 2
+                        offsetX: 0,                   // Posisi X: 0
+                        offsetY: 0                    // Posisi Y: 0
+                    },
+                    stroke: '#C8C8C8',   // Warna stroke #C8C8C8
+                    strokeWidth: 1       // Ketebalan stroke 1px
+                });
+        
+                let pointer2 = new fabric.Circle({
+                    id: 'pointer2',
+                    radius: obj._objects[0].strokeWidth*2.5,
+                    fill: 'white',
+                    top: obj._objects[1].getBoundingRect(true).top-obj._objects[1].points[1].y,
+                    left: obj._objects[1].getBoundingRect(true).left-obj._objects[1].points[1].x,
+                    originX: 'center',
+                    originY: 'center',
+                    hasBorders: false,
+                    hasControls: false,
+                    shadow: {
+                        color: 'rgba(0, 0, 0, 0.2)',  // Hitam dengan opacity 20%
+                        blur: 1,                      // Blur 2
+                        offsetX: 0,                   // Posisi X: 0
+                        offsetY: 0                    // Posisi Y: 0
+                    },
+                    stroke: '#C8C8C8',   // Warna stroke #C8C8C8
+                    strokeWidth: 1       // Ketebalan stroke 1px
+                });
+        
+                canvas.add(pointer1,pointer2);
+                canvas.setActiveObject(pointer2);
+                canvas.requestRenderAll();
+
+                canvas.on({
+                    'object:moving': endPointOfDottedLineToFollowPointer,
+                    'selection:cleared': removeDottedLinePointersOnSelectionCleared,
+                    'selection:updated': removeDottedLinePointersOnSelectionUpdated
+                });
+            } 
+        }  
+    }
+
+
+    function endPointOfDottedLineToFollowPointer(o){
+        
+        let obj = o.target;
+
+        if(obj.id==='pointer1'){
+            canvas.getObjects().forEach(o =>{
+                if(o.id==='Dotted-line' && o.label==='selected-line'){
+                    o.set({
+                    x1: obj.left,
+                    y1: obj.top
+                });
+                o.setCoords();
+                }
+            });
+        } else if(obj.id==='pointer2'){
+            canvas.getObjects().forEach(o =>{
+                if(o.id==='Dotted-line' && o.label==='selected-line'){
+                    o.set({
+                        x2: obj.left,
+                        y2: obj.top
+                    });
+                    o.setCoords();
+                }
+            });
+        } 
+
+    }
+
+
+    function removeDottedLinePointersOnSelectionCleared(o){
+
+        let pointersToRemove = [];
+
+        canvas.getObjects().forEach(o => {
+            if(o.id==='pointer1' || o.id==='pointer2'){
+                pointersToRemove.push(o);
+            }
+    
+            if(o.label === 'selected-line'){
+                
+                o.set({
+                    label: '',
+                });
+            }
+        });
+
+        pointersToRemove.forEach(pointer => {
+            canvas.remove(pointer);
+        });
+        
+        canvas.requestRenderAll();
+
+    }
+
+
+    function removeDottedLinePointersOnSelectionUpdated(o){
+
+        let obj = o.target;
+
+        if(obj.id === 'Dotted-line'){
+            removeDottedLinePointersOnSelectionCleared();
+        }
+
+    }
+
+
+    let NewDottedLineCoords = {};
+
+    function updateNewDottedLineCoordinates(o){
+        
+        NewDottedLineCoords = {};
+        let obj = o.target;
+        
+        if (obj.id==='Dotted-line'){
+            let centerX =  obj.getCenterPoint().x;
+            let centerY =  obj.getCenterPoint().y;
+
+            let x1offset =  obj.calcLinePoints().x1;
+            let y1offset =  obj.calcLinePoints().y1;
+            let x2offset =  obj.calcLinePoints().x2;
+            let y2offset =  obj.calcLinePoints().y2;
+
+            NewDottedLineCoords = {
                 x1: centerX+x1offset-obj.strokeWidth/2,
                 y1: centerY+y1offset-obj.strokeWidth/2,
                 x2: centerX+x2offset-obj.strokeWidth/2,

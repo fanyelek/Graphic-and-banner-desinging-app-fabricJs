@@ -62,7 +62,7 @@
         <button id="solid-line">Solid Line</button>
         <button id="dashed-line">Dashed Line</button>
         <button id="dotted-line">Dotted Line</button>
-        <button id="solid-arrow-line">Solid Arrow</button>
+        <button id="solid-Arrow">Solid Arrow</button>
         <button id="dashed-arrow-line">Dashed Arrow</button>
         <button id="circle-line">Circle Line</button>
         <button id="square-line">Square Line</button>
