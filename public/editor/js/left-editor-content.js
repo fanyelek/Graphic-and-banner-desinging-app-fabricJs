@@ -434,8 +434,7 @@ $(document).ready(function() {
                 let pointer1 = new fabric.Circle({
                     id: 'pointer1',
                     radius: obj.strokeWidth*2.5,
-                    fill: 'blue',
-                    opacity: 0.5,
+                    fill: 'white',
                     top: newLineCoords.y1,
                     left: newLineCoords.x1,
                     originX: 'center',
@@ -455,8 +454,7 @@ $(document).ready(function() {
                 let pointer2 = new fabric.Circle({
                     id: 'pointer2',
                     radius: obj.strokeWidth *2.5,
-                    fill: 'blue',
-                    opacity: 0.5,
+                    fill: 'white',
                     top: newLineCoords.y2,
                     left: newLineCoords.x2,
                     originX: 'center',
