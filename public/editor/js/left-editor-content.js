@@ -20,6 +20,7 @@
       overline: false,
       linethrough: false,
       fill: textcolor,
+      padding: 10,
       left: 100,
       top: 100,
       objecttype: 'text',
@@ -33,6 +34,7 @@
       transparentCorners: false,    // Ensure corners are not transparent
     })
     canvas.add(text)
+    canvas.setActiveObject(text);
   })
 
 
@@ -50,6 +52,7 @@
       textAlign: 'center',
       fontWeight: 'normal',
       fontSize: '24',
+      padding: 10,
       underline: false,
       overline: false,
       linethrough: false,
@@ -57,9 +60,17 @@
       left: 100,
       top: 100,
       objecttype: 'text',
-      lockUniScaling: true // Ensure uniform scaling
+      lockUniScaling: true, // Ensure uniform scaling
+      borderColor: '#0C8CE9',       // Border color around the object
+      cornerColor: 'white',         // Corner control fill color (white)
+      cornerStrokeColor: '#0C8CE9', // Border color for corner controls (blue)
+      cornerStyle: 'circle',        // Make corners circular
+      cornerSize: 10,               // Size of the corner controls
+      transparentCorners: false,    // Ensure corners are not transparent
     })
     canvas.add(text)
+    
+    canvas.setActiveObject(text);
   })
 
 
@@ -77,6 +88,7 @@
       textAlign: 'center',
       fontWeight: 'bold',
       fontSize: '36',
+      padding: 10,
       underline: false,
       overline: false,
       linethrough: false,
@@ -84,9 +96,17 @@
       left: 100,
       top: 100,
       objecttype: 'text',
-      lockUniScaling: true // Ensure uniform scaling
+      lockUniScaling: true, // Ensure uniform scaling
+      borderColor: '#0C8CE9',       // Border color around the object
+      cornerColor: 'white',         // Corner control fill color (white)
+      cornerStrokeColor: '#0C8CE9', // Border color for corner controls (blue)
+      cornerStyle: 'circle',        // Make corners circular
+      cornerSize: 10,               // Size of the corner controls
+      transparentCorners: false,    // Ensure corners are not transparent
     })
     canvas.add(text)
+    
+    canvas.setActiveObject(text);
   })
 
 
@@ -103,9 +123,16 @@ $('#add-rectangle').click(function() {
         fill: 'green',
         padding: 10,
         rx: 10,
-        ry: 10
+        ry: 10,
+        borderColor: '#0C8CE9',       // Border color around the object
+        cornerColor: 'white',         // Corner control fill color (white)
+        cornerStrokeColor: '#0C8CE9', // Border color for corner controls (blue)
+        cornerStyle: 'circle',        // Make corners circular
+        cornerSize: 10,               // Size of the corner controls
+        transparentCorners: false,    // Ensure corners are not transparent
     })
-    canvas.add(rectangle)
+    canvas.add(rectangle);
+    canvas.setActiveObject(rectangle);
     })
 
 // Add Circle
@@ -115,11 +142,19 @@ $('#add-circle').click(function() {
         top: 30,
         radius: 50,
         strokeWidth: 3,
+        padding: 10,
         stroke: 'black',
         fill: 'grey',
-        selectable: true
+        selectable: true,
+        borderColor: '#0C8CE9',       // Border color around the object
+        cornerColor: 'white',         // Corner control fill color (white)
+        cornerStrokeColor: '#0C8CE9', // Border color for corner controls (blue)
+        cornerStyle: 'circle',        // Make corners circular
+        cornerSize: 10,               // Size of the corner controls
+        transparentCorners: false,    // Ensure corners are not transparent
     });
-    canvas.add(circle)
+    canvas.add(circle);
+    canvas.setActiveObject(circle);
 })
 
 $('#add-triangle').click(function() {
@@ -127,9 +162,17 @@ $('#add-triangle').click(function() {
         left: 30,
         top: 30,
         fill: 'grey',
-        selectable: true
+        selectable: true,
+        padding: 10,
+        borderColor: '#0C8CE9',       // Border color around the object
+        cornerColor: 'white',         // Corner control fill color (white)
+        cornerStrokeColor: '#0C8CE9', // Border color for corner controls (blue)
+        cornerStyle: 'circle',        // Make corners circular
+        cornerSize: 10,               // Size of the corner controls
+        transparentCorners: false,    // Ensure corners are not transparent
     });
-    canvas.add(ecl)
+    canvas.add(ecl);
+    canvas.setActiveObject(ecl);
 })
 
 // Add Ellipse
@@ -139,9 +182,17 @@ $('#add-ellipse').click(function() {
         top: 50,
         rx: 100, // Horizontal radius
         ry: 50,  // Vertical radius
-        fill: 'blue'
+        padding: 10,
+        fill: 'blue',
+        borderColor: '#0C8CE9',       // Border color around the object
+        cornerColor: 'white',         // Corner control fill color (white)
+        cornerStrokeColor: '#0C8CE9', // Border color for corner controls (blue)
+        cornerStyle: 'circle',        // Make corners circular
+        cornerSize: 10,               // Size of the corner controls
+        transparentCorners: false,    // Ensure corners are not transparent
     });
     canvas.add(ellipse);
+    canvas.setActiveObject(ellipse);
 });
 
 // Add Star
@@ -162,11 +213,19 @@ $('#add-star').click(function() {
     let star = new fabric.Polygon(starPoints, {
         left: 200,
         top: 100,
+        padding: 10,
         fill: 'yellow',
         stroke: 'black',
-        strokeWidth: 2
+        strokeWidth: 2,
+        borderColor: '#0C8CE9',       // Border color around the object
+        cornerColor: 'white',         // Corner control fill color (white)
+        cornerStrokeColor: '#0C8CE9', // Border color for corner controls (blue)
+        cornerStyle: 'circle',        // Make corners circular
+        cornerSize: 10,               // Size of the corner controls
+        transparentCorners: false,    // Ensure corners are not transparent
     });
     canvas.add(star);
+    canvas.setActiveObject(star);
 });
 
 // Add Polygon (Triangle in this case)
@@ -185,9 +244,17 @@ $('#add-polygon').click(function() {
         top: 100,         // Posisi vertikal
         fill: 'blue',     // Warna isi
         stroke: 'black',  // Warna garis
-        strokeWidth: 2    // Lebar garis
+        strokeWidth: 2,    // Lebar garis
+        padding: 10,
+        borderColor: '#0C8CE9',       // Border color around the object
+        cornerColor: 'white',         // Corner control fill color (white)
+        cornerStrokeColor: '#0C8CE9', // Border color for corner controls (blue)
+        cornerStyle: 'circle',        // Make corners circular
+        cornerSize: 10,               // Size of the corner controls
+        transparentCorners: false,    // Ensure corners are not transparent
     });
     canvas.add(pentagon);
+    canvas.setActiveObject(pentagon);
 });
 
 
@@ -1284,179 +1351,3 @@ function StopAddingArrowLine(){
     // console.log(canvas.getObjects());
 }
 
-$(document).ready(function(){
-
-    canvas.on({
-        'mouse:dblclick': addingArrowSolidControlPoints,
-        // 'object:moved': updateArrowSolidCoordinates,
-    });
-
-    function addingArrowSolidControlPoints(o){
-        let obj = o.target;
-        
-        if(!obj){
-            
-            return;
-            
-        } else { 
-            if (obj.id==='arrow-solid'){
-                
-                obj.set({
-                    label: 'selected-line',
-                });
-                // console.log(obj._objects[1].points[1].x);
-
-                let pointer1 = new fabric.Circle({
-                    id: 'pointer1',
-                    radius: obj._objects[0].strokeWidth*2.5,
-                    fill: 'white',
-                    top: obj._objects[0].y1+obj._objects[0].strokeWidth/2,
-                    left: obj._objects[0].x1+obj._objects[0].strokeWidth/2,
-                    originX: 'center',
-                    originY: 'center',
-                    hasBorders: false,
-                    hasControls: false,
-                    shadow: {
-                        color: 'rgba(0, 0, 0, 0.2)',  // Hitam dengan opacity 20%
-                        blur: 2,                      // Blur 2
-                        offsetX: 0,                   // Posisi X: 0
-                        offsetY: 0                    // Posisi Y: 0
-                    },
-                    stroke: '#C8C8C8',   // Warna stroke #C8C8C8
-                    strokeWidth: 1       // Ketebalan stroke 1px
-                });
-        
-                let pointer2 = new fabric.Circle({
-                    id: 'pointer2',
-                    radius: obj._objects[0].strokeWidth*2.5,
-                    fill: 'white',
-                    top: obj._objects[1].getBoundingRect(true).top-obj._objects[1].points[1].y,
-                    left: obj._objects[1].getBoundingRect(true).left-obj._objects[1].points[1].x,
-                    originX: 'center',
-                    originY: 'center',
-                    hasBorders: false,
-                    hasControls: false,
-                    shadow: {
-                        color: 'rgba(0, 0, 0, 0.2)',  // Hitam dengan opacity 20%
-                        blur: 1,                      // Blur 2
-                        offsetX: 0,                   // Posisi X: 0
-                        offsetY: 0                    // Posisi Y: 0
-                    },
-                    stroke: '#C8C8C8',   // Warna stroke #C8C8C8
-                    strokeWidth: 1       // Ketebalan stroke 1px
-                });
-        
-                canvas.add(pointer1,pointer2);
-                canvas.setActiveObject(pointer2);
-                canvas.requestRenderAll();
-
-                canvas.on({
-                    'object:moving': endPointOfDottedLineToFollowPointer,
-                    'selection:cleared': removeDottedLinePointersOnSelectionCleared,
-                    'selection:updated': removeDottedLinePointersOnSelectionUpdated
-                });
-            } 
-        }  
-    }
-
-
-    function endPointOfDottedLineToFollowPointer(o){
-        
-        let obj = o.target;
-
-        if(obj.id==='pointer1'){
-            canvas.getObjects().forEach(o =>{
-                if(o.id==='Dotted-line' && o.label==='selected-line'){
-                    o.set({
-                    x1: obj.left,
-                    y1: obj.top
-                });
-                o.setCoords();
-                }
-            });
-        } else if(obj.id==='pointer2'){
-            canvas.getObjects().forEach(o =>{
-                if(o.id==='Dotted-line' && o.label==='selected-line'){
-                    o.set({
-                        x2: obj.left,
-                        y2: obj.top
-                    });
-                    o.setCoords();
-                }
-            });
-        } 
-
-    }
-
-
-    function removeDottedLinePointersOnSelectionCleared(o){
-
-        let pointersToRemove = [];
-
-        canvas.getObjects().forEach(o => {
-            if(o.id==='pointer1' || o.id==='pointer2'){
-                pointersToRemove.push(o);
-            }
-    
-            if(o.label === 'selected-line'){
-                
-                o.set({
-                    label: '',
-                });
-            }
-        });
-
-        pointersToRemove.forEach(pointer => {
-            canvas.remove(pointer);
-        });
-        
-        canvas.requestRenderAll();
-
-    }
-
-
-    function removeDottedLinePointersOnSelectionUpdated(o){
-
-        let obj = o.target;
-
-        if(obj.id === 'Dotted-line'){
-            removeDottedLinePointersOnSelectionCleared();
-        }
-
-    }
-
-
-    let NewDottedLineCoords = {};
-
-    function updateNewDottedLineCoordinates(o){
-        
-        NewDottedLineCoords = {};
-        let obj = o.target;
-        
-        if (obj.id==='Dotted-line'){
-            let centerX =  obj.getCenterPoint().x;
-            let centerY =  obj.getCenterPoint().y;
-
-            let x1offset =  obj.calcLinePoints().x1;
-            let y1offset =  obj.calcLinePoints().y1;
-            let x2offset =  obj.calcLinePoints().x2;
-            let y2offset =  obj.calcLinePoints().y2;
-
-            NewDottedLineCoords = {
-                x1: centerX+x1offset-obj.strokeWidth/2,
-                y1: centerY+y1offset-obj.strokeWidth/2,
-                x2: centerX+x2offset-obj.strokeWidth/2,
-                y2: centerY+y2offset-obj.strokeWidth/2,
-            }
-
-            obj.set({
-                x1: centerX+x1offset-obj.strokeWidth/2,
-                y1: centerY+y1offset-obj.strokeWidth/2,
-                x2: centerX+x2offset-obj.strokeWidth/2,
-                y2: centerY+y2offset-obj.strokeWidth/2,
-            });
-            obj.setCoords();
-        }
-    }
-
-});

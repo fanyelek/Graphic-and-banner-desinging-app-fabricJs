@@ -40,9 +40,9 @@ strong {
 .btn {
   padding: 7px 14px;
   font-weight: 600;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+  border: 1px solid #2D3E50;
+  border-bottom: 2px solid 2D3E50;
+  text-shadow: 1px 1px 0 2D3E50;
   text-transform: uppercase;
   font-size: 15px;
 }
@@ -54,7 +54,7 @@ strong {
 
 .btn:focus, .btn:active:focus, .btn.active:focus, .btn:hover {
   outline: 0 none;
-  border-color: rgba(0, 0, 0, 0.15);
+  /* border-color: rgba(0, 0, 0, 0.15); */
 }
 
 .btn i {
@@ -76,6 +76,11 @@ strong {
 .btn-primary {
   background: #4dace9;
   color: #ffffff;
+}
+
+.btn-save {
+  background: #fff;
+  color: #000;
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
@@ -121,12 +126,12 @@ strong {
 
 .btn-warning:active, .btn-warning.active {
   background: #ffb61a;
-  color: #312302;
+  color: #2D3E50;
   box-shadow: none;
 }
 
 #editor {
-  background: #2a2c33;
+  background: white;
   height: 100%;
   min-height: 100%;
   margin: 0;
@@ -167,18 +172,18 @@ strong {
   left: 0;
   width: 100%;
   padding: 8px 5px;
-  background: #1d1f24;
+  background: #2D3E50;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   height: 55px;
 }
 
 #editor-menu .nav a {
-  color: #fff;
+  color: black;
   font-size: 15px
 }
 
 #editor-menu .dropdown-menu a {
-  color: #444
+  color: #2D3E50
 }
 
 #editor-menu .nav a i {
@@ -296,15 +301,17 @@ strong {
 #editor-sidebar {
   position: fixed;
   left: 0;
-  height: 100%;
-  min-height: 100%;
+  height: calc(100% - 55px);
+  /* min-height: 100%; */
   width: 70px;
   top: 55px;
-  background: #1e1f24;
+  background: white;
   overflow: hidden;
   overflow-y: auto;
   z-index: 100;
   border-right: 1px solid rgba(255, 255, 255, 0.15);
+  border-right: 1px solid rgba(0, 0, 0, 0.15); /* Border lebih jelas */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Shadow pada sisi kanan */
 }
 
 .sidebar-header {
@@ -323,7 +330,7 @@ strong {
 
 .sidebar-selected-buttons a {
   text-align: center;
-  color: #fff;
+  color: black;
   text-decoration: none;
   display: block;
   padding: 8px 0;
@@ -331,8 +338,8 @@ strong {
 }
 
 .sidebar-selected-buttons a:hover {
-  background: #333;
-  color: #fff
+  background: #EFEFEF;
+  color: black
 }
 
 .sidebar-selected-buttons-disabled {
@@ -435,7 +442,7 @@ strong {
   display: block;
   margin: 40px auto;
   z-index: 50;
-  box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.2), 0 0 200px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.1), 0 0 200px rgba(0, 0, 0, 0.1);
 }
 
 #konva-container {
@@ -576,7 +583,7 @@ strong {
 }
 
 .sidebarbox-content #containerLayers li:hover {
-  background: rgba(255, 255, 255, 0.2)
+  background: #EFEFEF
 }
 
 .sidebarbox-content-inner {

@@ -21,6 +21,7 @@
     <!-- Element Toolbar -->
     @include('editor.layouts.editor-left')
     
+
     <!-- Canvas Image -->
     <div id="editor-content">
       <div id="editor-canvas">
