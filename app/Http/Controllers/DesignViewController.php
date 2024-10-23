@@ -10,6 +10,12 @@ use App\Models\CrativeDesigns;
 
 class DesignViewController extends Controller
 {
+
+    public function percobaan(){
+        return view('percobaan');
+    }
+
+
     public function allTemplates(Request $req){
         $design = DB::table('crative_designs')->where("visible","public")->get();
       //  return var_dump($design);

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/percobaan', [App\Http\Controllers\DesignViewController::class, "percobaan"]);
 
 Route::group(['middleware'=>['auth','auth']], function (){
     
