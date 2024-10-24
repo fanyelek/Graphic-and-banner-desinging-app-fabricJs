@@ -139,7 +139,13 @@ document.addEventListener('click', function (event) {
     isDrawingArrowDashLine = false;
     ArrowDashLineMode = false;
 
+    document.querySelectorAll('.sidebar-button').forEach(btn => {
+      btn.querySelector('img').src = btn.getAttribute('data-inactive-src');
+      btn.classList.remove('active');
+    });
+    
     });
   }
+  
 });
 

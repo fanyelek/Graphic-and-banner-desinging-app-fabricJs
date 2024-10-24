@@ -7,38 +7,46 @@
     <div class="sidebar-buttons">
       
       <!-- Add Template Button -->
-      <a href="#" id="add-template"><img src="{{ asset('images/icon-dashboard/Template Icon.png') }}" alt="Template" style="width: 27px; margin-top: 20px">
+      <a href="#" id="add-template" class="sidebar-button" data-inactive-src="{{ asset('images/icon-dashboard/Template Icon 1.png') }}" 
+      data-active-src="{{ asset('images/icon-dashboard/Template Icon (1).png') }}">
+        <img src="{{ asset('images/icon-dashboard/Template Icon 1.png') }}" alt="Template" style="width: 34px; margin-top: 20px">
         <br>
-        <p style="font-size: 11px; color: black; font-weight: 450; margin-top: -47px">Shape</p>
+        <p style="font-size: 11px; color: black; font-weight: 450; margin-top: -47px">Template</p>
       </i></a>
       
       <!-- Add Text Button -->
-      <a href="#" id="add-text"><img src="{{ asset('images/icon-dashboard/Text Icon.png') }}" alt="Text" style="width: 27px">
+      <a href="#" id="add-text" class="sidebar-button" data-inactive-src="{{ asset('images/icon-dashboard/Text Icon 1.png') }}" 
+      data-active-src="{{ asset('images/icon-dashboard/Text Icon (1).png') }}">
+        <img src="{{ asset('images/icon-dashboard/Text Icon 1.png') }}" alt="Text" style="width: 34px">
         <br>
         <p style="font-size: 11px; color: black; font-weight: 450; margin-top: -47px">Text</p>
       </i></a>
 
       <!-- Add Shape Button -->
-      <a href="#" id="toggle-shape-group">
-      <img src="{{ asset('images/icon-dashboard/Shape Icon.png') }}" alt="Shape" style="width: 27px"><br>
+      <a href="#" id="toggle-shape-group" class="sidebar-button" data-inactive-src="{{ asset('images/icon-dashboard/Shape Icon 1.png') }}" 
+      data-active-src="{{ asset('images/icon-dashboard/Shape Icon (1).png') }}">
+      <img src="{{ asset('images/icon-dashboard/Shape Icon 1.png') }}" alt="Shape" style="width: 34px"><br>
         <p style="font-size: 11px; color: black; font-weight: 450; margin-top: -47px">Shape</p></i> <!-- Icon for Shape Group -->
       </a>
 
       <!-- Add Element Button -->
-      <a href="#" id="add-element">
-      <img src="{{ asset('images/icon-dashboard/Elements Icon.png') }}" alt="Element" style="width: 27px"><br>
+      <a href="#" id="add-element" class="sidebar-button" data-inactive-src="{{ asset('images/icon-dashboard/Elements Icon 1.png') }}" 
+      data-active-src="{{ asset('images/icon-dashboard/Elements Icon (1).png') }}">
+      <img src="{{ asset('images/icon-dashboard/Elements Icon 1.png') }}" alt="Element" style="width: 34px"><br>
         <p style="font-size: 11px; color: black; font-weight: 450; margin-top: -47px">Element</p></i> <!-- Icon for Element Group -->
       </a>
 
       <!-- Add Frame Button -->
-      <a href="#" id="add-frame">
-      <img src="{{ asset('images/icon-dashboard/Frame Icon.png') }}" alt="Frame" style="width: 27px"><br>
+      <a href="#" id="add-frame" class="sidebar-button" data-inactive-src="{{ asset('images/icon-dashboard/Frame Icon 1.png') }}" 
+      data-active-src="{{ asset('images/icon-dashboard/Frame Icon (1).png') }}">
+      <img src="{{ asset('images/icon-dashboard/Frame Icon 1.png') }}" alt="Frame" style="width: 34px"><br>
         <p style="font-size: 11px; color: black; font-weight: 450; margin-top: -47px">Frame</p></i> <!-- Icon for Frame Group -->
       </a>
 
       <!-- Add Upload Button -->
-      <a href="#" id="add-upload">
-      <img src="{{ asset('images/icon-dashboard/Upload Icon.png') }}" alt="Frame" style="width: 27px"><br>
+      <a href="#" id="add-upload" class="sidebar-button" data-inactive-src="{{ asset('images/icon-dashboard/Upload Icon 1.png') }}" 
+      data-active-src="{{ asset('images/icon-dashboard/Upload Icon (1).png') }}">
+      <img src="{{ asset('images/icon-dashboard/Upload Icon 1.png') }}" alt="Frame" style="width: 34px"><br>
         <p style="font-size: 11px; color: black; font-weight: 450; margin-top: -47px">Upload</p></i> <!-- Icon for Upload -->
       </a>
 
@@ -127,3 +135,22 @@
     </div>
   </div>
 </div>
+
+
+  <script>
+// JavaScript untuk mengganti gambar saat button diklik
+document.querySelectorAll('.sidebar-button').forEach(button => {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        // Hapus kelas 'active' dari semua button
+        document.querySelectorAll('.sidebar-button').forEach(btn => {
+            btn.querySelector('img').src = btn.getAttribute('data-inactive-src');
+            btn.classList.remove('active');
+        });
+        
+        // Tambahkan kelas 'active' ke button yang diklik
+        this.classList.add('active');
+        this.querySelector('img').src = this.getAttribute('data-active-src');
+    });
+});
+</script>

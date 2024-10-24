@@ -41,6 +41,6 @@
 }
 
 .sidebar-buttons a.active {
-    background: #333;
+    /* background: #333; */
     color: #fff;
   }
