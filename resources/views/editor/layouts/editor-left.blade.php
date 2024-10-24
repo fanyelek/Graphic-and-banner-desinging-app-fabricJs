@@ -123,7 +123,7 @@
         <a href="#" id="dotted-line">
           <img src="{{ asset('images/icon-dashboard/Group 78.png') }}" width="200px" alt="rectangle" style="margin-bottom: 10px"><br>
         </a>
-        <a href="#" id="solid-Arrow">
+        <a href="#" id="solid-ArrowLine">
           <img src="{{ asset('images/icon-dashboard/Group 79.png') }}" width="200px" alt="rectangle" style="margin-bottom: 10px"><br>
         </a>
         <!-- <button id="dashed-arrow-line">Dashed Arrow</button>

@@ -1160,56 +1160,59 @@ $(document).ready(function(){
 
 
 
-
-// =====================================================================================
-// ====================                                         ========================
-// ====================           ADDING SOLID ARROW            ========================
-// ====================                                         ========================
-// =====================================================================================
-
+// ==========================================================================================
+// ====================                                              ========================
+// ====================           ADDING SOLID ARROW LINE            ========================
+// ====================                                              ========================
+// ==========================================================================================
 
 
-let AddingArrowLineBtn = document.getElementById('solid-ArrowLine');
 
-AddingArrowLineBtn.addEventListener('click', activateAddingArrowLine);
+let AddingArrowBtn = document.getElementById('solid-Arrow');
 
-function activateAddingArrowLine(){
-    canvas.defaultCursor = 'crosshair';
+AddingArrowBtn.addEventListener('click', activateAddingArrow);
 
-    canvas.on('mouse:down', startAddingArrowLine);
-    canvas.on('mouse:move', startDrawingArrowLine);
-    canvas.on('mouse:up', stopAddingArrowLine);
+let ArrowCounter = 0;
+function activateAddingArrow(){
 
-    canvas.discardActiveObject();
-    canvas.renderAll();
-    canvas.selection = false;  
-
-    canvas.getObjects().forEach(o => {
-        if(o.id==='solid-ArrowLine'){
-
-            if (!o.prevHoverCursor) {
-                o.prevHoverCursor = canvas.defaultCursor || 'default';  // Simpan nilai hoverCursor saat ini atau gunakan 'default' jika tidak ada
-            }
-
-            o.set({
-                selectable: false,
-                hoverCursor: o.prevHoverCursor
-            })
-        }
+    canvas.on({
+        'mouse:down': StartAddingArrowLine,
+        'mouse:move': StartDrawingArrowLine,
+        'mouse:up': StopAddingArrowLine,
     });
+
+    canvas.selection = false;
+
+    // canvas.getObjects().forEach(o => {
+    //     if(o.id){
+
+    //         if (!o.prevHoverCursor) {
+    //             o.prevHoverCursor = canvas.defaultCursor || 'default';  // Simpan nilai hoverCursor saat ini atau gunakan 'default' jika tidak ada
+    //         }
+
+    //         o.set({
+    //             selectable: false,
+    //             hoverCursor: o.prevHoverCursor
+    //         })
+    //     }
+    // });
+
 }
 
-let ArrowLine;
+let MouseDownArrowLine;
+let ArrowLine = false;
 let ArrowHead1;
-let MouseDownArrowLine = false;
-let ArrowLineId = 0;
+let ActiveArrow = false;
+let clickedit;
 
-function startAddingArrowLine(o){
+function StartAddingArrowLine(o){
+    
     MouseDownArrowLine = true;
     let pointer = canvas.getPointer(o.e);
 
-    ArrowLine = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
-        id: 'solid-ArrowLine'+ArrowLineId,
+    ArrowLine = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y],{
+        id: 'arrow-line'+ArrowCounter,
+        label: 'arrow-line-off',
         stroke: 'red',
         strokeWidth: 3,
         hasControls: false,
@@ -1221,7 +1224,8 @@ function startAddingArrowLine(o){
         {x: -20, y: -10},
         {x: -20, y: 10}
     ], {
-        id: 'solid-ArrowLine'+ArrowLineId,
+        id: 'arrow-line' + ArrowCounter,
+        label: 'arrow-line-off',
         fill: 'red',
         selectable: true,
         hasControls: false,
@@ -1231,20 +1235,23 @@ function startAddingArrowLine(o){
         originY: 'center'
     });
 
+    ArrowCounter++;
     canvas.add(ArrowLine,ArrowHead1);
-    ArrowLineId++;
     canvas.requestRenderAll();
+
 }
 
+function StartDrawingArrowLine(o){
 
-
-function startDrawingArrowLine(o){
     if(MouseDownArrowLine === true){
+
         let pointer = canvas.getPointer(o.e);
     
         ArrowLine.set({
+    
             x2: pointer.x,
             y2: pointer.y
+
         });
 
         ArrowHead1.set({
@@ -1252,109 +1259,310 @@ function startDrawingArrowLine(o){
             top: pointer.y
         });
 
-        let x1 = ArrowLine.x1;
-        let y1 = ArrowLine.y1;
-        let x2 = pointer.x;
-        let y2 = pointer.y;
+            let x1 = ArrowLine.x1;
+            let y1 = ArrowLine.y1;
+            let x2 = pointer.x;
+            let y2 = pointer.y;
 
-        let verticalHeight = Math.abs(y2 - y1);
-        let horizontalWidth = Math.abs(x2 - x1);
+            let verticalHeight = Math.abs(y2 - y1);
+            let horizontalWidth = Math.abs(x2 - x1);
 
-        let tanRatio = verticalHeight / horizontalWidth;
-        let basicAngle = Math.atan(tanRatio)*180/Math.PI;
+            let tanRatio = verticalHeight / horizontalWidth;
+            let basicAngle = Math.atan(tanRatio)*180/Math.PI;
 
-        if (x2>x1) {
-            if (y2<y1) {
-                ArrowHead1.set({
-                    angle: -basicAngle
-                });
+            if (x2>x1) {
+                if (y2<y1) {
+                    ArrowHead1.set({
+                        angle: -basicAngle
+                    });
+                }
+                else if(y2===y1) {
+                    ArrowHead1.set({
+                        angle: 0
+                    });
+                }
+                else if(y2>y1) {
+                    ArrowHead1.set({
+                        angle: basicAngle
+                    });
+                }
+            }else if (x2 < x1) {
+                if (y2 > y1) {
+                    ArrowHead1.set({
+                        angle: 180 - basicAngle
+                    });
+                } else if (y2 === y1) {
+                    ArrowHead1.set({
+                        angle: 180
+                    });
+                } else if (y2 < y1) {
+                    ArrowHead1.set({
+                        angle: 180 + basicAngle
+                    });
+                }
             }
-            else if(y2===y1) {
-                ArrowHead1.set({
-                    angle: 0
-                });
-            }
-            else if(y2>y1) {
-                ArrowHead1.set({
-                    angle: basicAngle
-                });
-            }
-        }else if (x2 < x1) {
-            if (y2 > y1) {
-                ArrowHead1.set({
-                    angle: 180 - basicAngle
-                });
-            } else if (y2 === y1) {
-                ArrowHead1.set({
-                    angle: 180
-                });
-            } else if (y2 < y1) {
-                ArrowHead1.set({
-                    angle: 180 + basicAngle
-                });
-            }
-        }
-
+        
         ArrowLine.setCoords();
-        ArrowHead1.setCoords()
+        ArrowHead1.setCoords();
         canvas.requestRenderAll();
+
     }
+
 }
 
-
-
-
-function stopAddingArrowLine(){
+function StopAddingArrowLine(){
     canvas.defaultCursor = 'default';
 
-    canvas.getObjects().forEach(o => {
-        if(/^solid-ArrowLine\d+$/.test(o.id)){
-
-            if(!o.prehoverCursor){
-                o.prehoverCursor = 'all-scroll';
-            }
-
-            o.set({
-                selectable: true,
-                hoverCursor: o.prehoverCursor
-            })
-        }
-    });
-    
-    ArrowLine.setCoords();
     MouseDownArrowLine = false;
 
-    canvas.off('mouse:down', startAddingArrowLine);
-    canvas.off('mouse:move', startDrawingArrowLine);
-    canvas.off('mouse:up', stopAddingArrowLine);
-
     canvas.selection = true;
-    
+
     canvas.defaultCursor = 'auto';
+    canvas.requestRenderAll();
+    canvas.off({
+        'mouse:down': StartAddingArrowLine,
+        'mouse:move': StartDrawingArrowLine,
+        'mouse:up': StopAddingArrowLine,
+    });
 }
 
 
-$(document).ready(function() {
 
+//re-drawing arrow-line
+$(document).ready(function(){
+    // canvas.off();
+    //activate redrawing arrow line
     canvas.on({
-        'object:moving': updateNewArrowLineCoordinates,
-        'selection:created': updateNewArrowLineCoordinates,
-        'selection:updated': updateNewArrowLineCoordinates,
-        'mouse:dblclick': addingControlPoints
+        'mouse:down': addingArrowLineControlPoints,
+        'object:moved': updateNewDottedLineCoordinates,
     });
 
-    let newArrowLineCoords = {};
-    
-    function updateNewArrowLineCoordinates(o){
-        newArrowLineCoords = {};
+
+    function addingArrowLineControlPoints(o){
         let obj = o.target;
 
+        //if there is arrow object was clicked that have label 'off' (measn no selected arrow)
+        if(obj && obj.label === 'arrow-line-off'){
+                        
+            let pointersToRemove = [];
+            
+            //set all arrow objects to label off and remove pointer
+            canvas.getObjects().forEach(o => {
+                if(/^arrow-pointer\d+$/.test(o.label)){
+                    pointersToRemove.push(o);
+                }
+                
+                if(o.label === 'arrow-active'){
+                    
+                    o.set({
+                        label: 'arrow-line-off',
+                    });
+                }
+            });
 
+            pointersToRemove.forEach(pointer => {
+                canvas.remove(pointer);
+            });
+
+            canvas.requestRenderAll();
+
+            //get id  arrow
+            let SelectedId = obj.id;
+            let id = SelectedId.match(/\d+/)[0];
+
+            let ArrowSelected = canvas.getObjects().filter(function(item){ return item.id === SelectedId});
+            let x1Line = ArrowSelected[0].x1;
+            let y1Line = ArrowSelected[0].y1;
+            let strokeLine = ArrowSelected[0].strokeWidth;
+            let CenterPointTriangle = ArrowSelected[1].getCenterPoint();
+
+            //give label 'active' to arrow selected
+            ArrowSelected[0].set({
+                label: 'arrow-active'
+            });
+
+            ArrowSelected[1].set({
+                label: 'arrow-active'
+            });
+            
+
+            ActiveArrow = true;
+
+            let Pointer1 = new fabric.Circle({
+                id: id,
+                label: 'arrow-pointer1',
+                left: x1Line+strokeLine/2,
+                top: y1Line+strokeLine/2,
+                radius: 10,
+                fill: 'red',
+                originX: 'center',
+                originY: 'center'
+            });
+
+            let Pointer2 = new fabric.Circle({
+                id: id,
+                label: 'arrow-pointer2',
+                left: CenterPointTriangle.x,
+                top: CenterPointTriangle.y,
+                radius: 10,
+                fill: 'blue',
+                originX: 'center',
+                originY: 'center'
+            });
+
+            // console.log(id);
+
+            
+            
+            // add pointer to active arrow
+            canvas.add(Pointer1, Pointer2);
+            canvas.renderAll();
+            
+            canvas.on({
+                'object:moving': ActiveArrowMove,
+                // 'mouse:up': andlistenermovingpointer,
+            });
+            
+
+        } else if(ActiveArrow) { //if there is selected arrow
+
+            // if clicked else where in canvas, but no object selected
+            if(!obj){
+                let pointersToRemove = [];
+    
+                canvas.getObjects().forEach(o => {
+                    if(/^arrow-pointer\d+$/.test(o.label)){
+                        pointersToRemove.push(o);
+                    }
+            
+                    if(o.label === 'arrow-active'){
+                        
+                        o.set({
+                            label: 'arrow-line-off',
+                        });
+                    }
+                });
+    
+                pointersToRemove.forEach(pointer => {
+                    canvas.remove(pointer);
+                });
+
+                ActiveArrow = false;
+                canvas.requestRenderAll();
+                return
+
+            }else{ //if pointer 1 clicked
+                if(obj.label === 'arrow-pointer1'){
+
+                    canvas.off('object:moving');
+                    canvas.on(
+                        'object:moving', function(event) {
+                            updateNewArrowLineCoordinatesBase(obj.id);
+                    });
+
+                    return
+
+                }else if(obj.label === 'arrow-pointer2'){
+
+                    canvas.off('object:moving');
+                    canvas.on(
+                        'object:moving', function(event) {
+                            updateNewArrowLineCoordinatesEnd(obj.id);
+                    });
+
+                    return
+                }
+                // else{
+                //     canvas.off();
+                //     canvas.on({
+                //         'object:moving': ActiveArrowMove,
+                //         'mouse:up': andlistenermovingpointer,
+                //     });
+                // }
+            }
+        }
+    }
+
+    // function removeDottedLinePointersOnSelectionCleared(o){
+
+    //     let pointersToRemove = [];
+
+    //     canvas.getObjects().forEach(o => {
+    //         if(o.id==='pointer1' || o.id==='pointer2'){
+    //             pointersToRemove.push(o);
+    //         }
+    
+    //         if(o.label === 'selected-line'){
+                
+    //             o.set({
+    //                 label: '',
+    //             });
+    //         }
+    //     });
+
+    //     pointersToRemove.forEach(pointer => {
+    //         canvas.remove(pointer);
+    //     });
         
-        // console.log('disini');
-        // console.log(ArrowHeadActive.getCenterPoint());
-        
-        if (/^solid-ArrowLine\d+$/.test(obj.id) && obj.type === 'line'){      
+    //     canvas.requestRenderAll();
+
+    // }
+
+
+    // function removeDottedLinePointersOnSelectionUpdated(o){
+
+    //     let obj = o.target;
+
+    //     if(obj.id === 'Dotted-line'){
+    //         removeDottedLinePointersOnSelectionCleared();
+    //     }
+
+    // }
+
+    // function andlistenermovingpointer(){
+    //     canvas.off({
+    //         'object:moving': ActiveArrowMove,
+    //     });
+    //     canvas.off(
+    //         'object:moving', function(event) {
+    //             updateNewArrowLineCoordinatesBase;
+    //     },
+    //      'mouse:up',function(event) {
+    //             andlistenermovingpointer});
+    // }
+
+    let NewDottedLineCoords = {};
+    // when active arrow click and move
+    function ActiveArrowMove(o){
+
+        let pointersToRemove = [];
+    
+        canvas.getObjects().forEach(o => {
+            if(/^arrow-pointer\d+$/.test(o.label)){
+                pointersToRemove.push(o);
+            }
+    
+            if(o.label === 'arrow-active'){
+                
+                o.set({
+                    label: 'arrow-line-off',
+                });
+            }
+        });
+
+        pointersToRemove.forEach(pointer => {
+            canvas.remove(pointer);
+        });
+
+        let objactive = canvas.getActiveObject();
+        // console.log(objactive);
+            
+            
+        NewDottedLineCoords = {};
+        let obj = o.target;
+        // console.log(obj);
+            
+        if (obj.id === objactive.id){
             let centerX =  obj.getCenterPoint().x;
             let centerY =  obj.getCenterPoint().y;
             
@@ -1363,11 +1571,11 @@ $(document).ready(function() {
             let x2offset =  obj.calcLinePoints().x2;
             let y2offset =  obj.calcLinePoints().y2;
             
-            newArrowLineCoords = {
-                x1: centerX+x1offset-obj.strokeWidth/2,
-                y1: centerY+y1offset-obj.strokeWidth/2,
-                x2: centerX+x2offset-obj.strokeWidth/2,
-                y2: centerY+y2offset-obj.strokeWidth/2,
+            NewDottedLineCoords = {
+            x1: centerX+x1offset-obj.strokeWidth/2,
+            y1: centerY+y1offset-obj.strokeWidth/2,
+            x2: centerX+x2offset-obj.strokeWidth/2,
+            y2: centerY+y2offset-obj.strokeWidth/2,
             }
             
             obj.set({
@@ -1377,248 +1585,277 @@ $(document).ready(function() {
                 y2: centerY+y2offset-obj.strokeWidth/2,
             });
             obj.setCoords();
-
-            let ArrowHeadActive = canvas.getObjects().filter(function(item){ return item.id === obj.id && item.type === 'polygon'})[0];
-            if (ArrowHeadActive) {
-                // Posisikan ulang kepala panah (segitiga) berdasarkan koordinat akhir garis (x2, y2)
-                let angle = Math.atan2(newArrowLineCoords.y2 - newArrowLineCoords.y1, newArrowLineCoords.x2 - newArrowLineCoords.x1);
-                ArrowHeadActive.set({
-                    left: newArrowLineCoords.x2, // X koordinat akhir garis
-                    top: newArrowLineCoords.y2,  // Y koordinat akhir garis
-                    angle: angle * (180 / Math.PI) // Putar segitiga agar sesuai arah garis
-                });
-                ArrowHeadActive.setCoords();
-                canvas.renderAll()
-            }  
-        }
-    }
-
-    function addingControlPoints(o){
-        let obj = o.target;
-        
-        if(!obj){
             
-            return;
+            let ArrowHeadFollow = canvas.getObjects().filter(function(item){ return item.id === obj.id && item.type === 'polygon'})[0];
+            ArrowHeadFollow.set({
+                left: obj.x2,
+                top: obj.y2
+            });
+            ArrowHeadFollow.setCoords();
+        }
+        canvas.renderAll();
 
-        } else { 
-            if (/^solid-ArrowLine\d+$/.test(obj.id)){
-                let ArrowHeadActive = canvas.getObjects().filter(function(item){ return item.id === obj.id && item.type === 'polygon'})[0];
-
-                obj.set({
-                    label: 'selected-ArrowLine',
-                });
-
-                ArrowHeadActive.set({
-                    label: 'selected-ArrowLine',
-                });
-
-                // console.log(ArrowHeadActive);
-
-                let pointer1 = new fabric.Circle({
-                    id: 'pointer1',
-                    radius: obj.strokeWidth*2.5,
-                    fill: 'white',
-                    top: newArrowLineCoords.y1,
-                    left: newArrowLineCoords.x1,
-                    originX: 'center',
-                    originY: 'center',
-                    hasBorders: false,
-                    hasControls: false,
-                    shadow: {
-                        color: 'rgba(0, 0, 0, 0.2)',  // Hitam dengan opacity 20%
-                        blur: 2,                      // Blur 2
-                        offsetX: 0,                   // Posisi X: 0
-                        offsetY: 0                    // Posisi Y: 0
-                    },
-                    stroke: '#C8C8C8',   // Warna stroke #C8C8C8
-                    strokeWidth: 1       // Ketebalan stroke 1px
-                });
-        
-                let pointer2 = new fabric.Circle({
-                    id: 'pointer2',
-                    radius: obj.strokeWidth *2.5,
-                    fill: 'white',
-                    top: newArrowLineCoords.y2,
-                    left: newArrowLineCoords.x2,
-                    originX: 'center',
-                    originY: 'center',
-                    hasBorders: false,
-                    hasControls: false,
-                    shadow: {
-                        color: 'rgba(0, 0, 0, 0.2)',  // Hitam dengan opacity 20%
-                        blur: 2,                      // Blur 2
-                        offsetX: 0,                   // Posisi X: 0
-                        offsetY: 0                    // Posisi Y: 0
-                    },
-                    stroke: '#C8C8C8',   // Warna stroke #C8C8C8
-                    strokeWidth: 1       // Ketebalan stroke 1px
-                });
-        
-                canvas.add(pointer1,pointer2);
-                canvas.setActiveObject(pointer2);
-                canvas.requestRenderAll();
-
-                canvas.on({
-                    'object:moving': endPointOfArrowLineToFollowPointer,
-                    'selection:cleared': removePointersOnSelectionCleared,
-                    'selection:updated': removePointersOnSelectionUpdated
-                });
-            } 
-        }  
     }
 
-    function removePointersOnSelectionUpdated(o){
-        let obj = o.target;
+    let NewDottedLineCoords1 = {};
 
-        if(/^solid-ArrowLine\d+$/.test(obj.id)){
-            removePointersOnSelectionCleared();
+    function updateNewDottedLineCoordinates(o){
+        
+        NewDottedLineCoords1 = {};
+        let obj = o.target;
+        
+        if (obj.id==='Dotted-line'){
+            let centerX =  obj.getCenterPoint().x;
+            let centerY =  obj.getCenterPoint().y;
+
+            let x1offset =  obj.calcLinePoints().x1;
+            let y1offset =  obj.calcLinePoints().y1;
+            let x2offset =  obj.calcLinePoints().x2;
+            let y2offset =  obj.calcLinePoints().y2;
+
+            NewDottedLineCoords1 = {
+                x1: centerX+x1offset-obj.strokeWidth/2,
+                y1: centerY+y1offset-obj.strokeWidth/2,
+                x2: centerX+x2offset-obj.strokeWidth/2,
+                y2: centerY+y2offset-obj.strokeWidth/2,
+            }
+
+            obj.set({
+                x1: centerX+x1offset-obj.strokeWidth/2,
+                y1: centerY+y1offset-obj.strokeWidth/2,
+                x2: centerX+x2offset-obj.strokeWidth/2,
+                y2: centerY+y2offset-obj.strokeWidth/2,
+            });
+            obj.setCoords();
         }
     }
 
-    function removePointersOnSelectionCleared(){
-        let pointersToRemove = [];
+    // base pointer moved
+    function updateNewArrowLineCoordinatesBase(id){
 
-        canvas.getObjects().forEach(o => {
-            if(o.id==='pointer1' || o.id==='pointer2'){
-                pointersToRemove.push(o);
-            }
+        let obj = canvas.getActiveObject();
+
+        let line = canvas.getObjects().filter(function(item){ return item.id === 'arrow-line'+id && item.type === 'line'})[0];
+        let ArrowHead1 = canvas.getObjects().filter(function(item){ return item.id === 'arrow-line'+id && item.type === 'polygon'})[0];
     
-            if(o.label === 'selected-ArrowLine'){
-                
-                o.set({
-                    label: '',
+        
+
+        canvas.getObjects().forEach(o =>{
+
+            // moving line start
+            if(o.id==='arrow-line'+id && o.label==='arrow-active'){
+                    o.set({
+                    x1: obj.left,
+                    y1: obj.top
                 });
+                // o.setCoords();
+                canvas.renderAll();
+
+                // moving line end
+
+
+                // moving angle triangle start
+                let x1 = obj.left;
+                let y1 = obj.top;
+                let x2 = line.x2;
+                let y2 = line.y2;
+
+                let verticalHeight = Math.abs(y2 - y1);
+                let horizontalWidth = Math.abs(x2 - x1);
+
+                let tanRatio = verticalHeight / horizontalWidth;
+                let basicAngle = Math.atan(tanRatio)*180/Math.PI;
+
+                if (x2>x1) {
+                    if (y2<y1) {
+                        ArrowHead1.set({
+                            angle: -basicAngle
+                        });
+                    }
+                    else if(y2===y1) {
+                        ArrowHead1.set({
+                            angle: 0
+                        });
+                    }
+                    else if(y2>y1) {
+                        ArrowHead1.set({
+                            angle: basicAngle
+                        });
+                    }
+                }else if (x2 < x1) {
+                    if (y2 > y1) {
+                        ArrowHead1.set({
+                            angle: 180 - basicAngle
+                        });
+                    } else if (y2 === y1) {
+                        ArrowHead1.set({
+                            angle: 180
+                        });
+                    } else if (y2 < y1) {
+                        ArrowHead1.set({
+                            angle: 180 + basicAngle
+                        });
+                    }
+                }
+                // ArrowHead1.setCoords();
+                // moving angle triangle start
+
+                // o.setCoords();
+            
+                // let objactive = obj;
+                // console.log(objactive);
+                    
+                    
+                NewDottedLineCoords = {};
+                    let centerX =  line.getCenterPoint().x;
+                    let centerY =  line.getCenterPoint().y;
+                    
+                    let x1offset =  line.calcLinePoints().x1;
+                    let y1offset =  line.calcLinePoints().y1;
+                    let x2offset =  line.calcLinePoints().x2;
+                    let y2offset =  line.calcLinePoints().y2;
+                    
+                    NewDottedLineCoords = {
+                    x1: centerX+x1offset-line.strokeWidth/2,
+                    y1: centerY+y1offset-line.strokeWidth/2,
+                    x2: centerX+x2offset-line.strokeWidth/2,
+                    y2: centerY+y2offset-line.strokeWidth/2,
+                    }
+                    
+                    line.set({
+                        x1: centerX+x1offset-obj.strokeWidth/2,
+                        y1: centerY+y1offset-obj.strokeWidth/2,
+                        x2: centerX+x2offset-line.strokeWidth/2,
+                        y2: centerY+y2offset-line.strokeWidth/2,
+                    });
+                    line.setCoords();
+                    
+                    // let ArrowHeadFollow = canvas.getObjects().filter(function(item){ return item.id === obj.id && item.type === 'polygon'})[0];
+                    // ArrowHead1.set({
+                    //     left: line.x2,
+                    //     top: line.y2
+                    // });
+                    ArrowHead1.setCoords();
+                // }
+            }
+            canvas.renderAll();
+
+        });
+    }
+    
+
+    // end pointer moved
+    function updateNewArrowLineCoordinatesEnd(id){
+
+        let obj = canvas.getActiveObject();
+
+        let line = canvas.getObjects().filter(function(item){ return item.id === 'arrow-line'+id && item.type === 'line'})[0];
+        let ArrowHead1 = canvas.getObjects().filter(function(item){ return item.id === 'arrow-line'+id && item.type === 'polygon'})[0];
+    
+
+
+        canvas.getObjects().forEach(o =>{
+            if(o.id==='arrow-line'+id && o.label==='arrow-active'){
+                    o.set({
+                    x2: obj.left,
+                    y2: obj.top
+                });
+                o.setCoords();
+
+
+                // measuring angle arrow
+                let x1 = line.x1;
+                let y1 = line.y1;
+                let x2 = obj.left;
+                let y2 = obj.top;
+
+                let verticalHeight = Math.abs(y2 - y1);
+                let horizontalWidth = Math.abs(x2 - x1);
+
+                let tanRatio = verticalHeight / horizontalWidth;
+                let basicAngle = Math.atan(tanRatio)*180/Math.PI;
+
+                ArrowHead1.set({
+                    left: obj.left,
+                    top: obj.top
+                });
+
+                if (x2>x1) {
+                    if (y2<y1) {
+                        ArrowHead1.set({
+                            angle: -basicAngle
+                        });
+                        ArrowHead1.setCoords();
+                    }
+                    else if(y2===y1) {
+                        ArrowHead1.set({
+                            angle: 0
+                        });
+                        ArrowHead1.setCoords();
+                    }
+                    else if(y2>y1) {
+                        ArrowHead1.set({
+                            angle: basicAngle
+                        });
+                        ArrowHead1.setCoords();
+                    }
+                }else if (x2 < x1) {
+                    if (y2 > y1) {
+                        ArrowHead1.set({
+                            angle: 180 - basicAngle
+                        });
+                        ArrowHead1.setCoords();
+                    } else if (y2 === y1) {
+                        ArrowHead1.set({
+                            angle: 180
+                        });
+                        ArrowHead1.setCoords();
+                    } else if (y2 < y1) {
+                        ArrowHead1.set({
+                            angle: 180 + basicAngle
+                        });
+                        ArrowHead1.setCoords();
+                    }
+                }
+                // ArrowHead1.setCoords();
+
+                // // o.setCoords();
+                NewDottedLineCoords = {};
+                // let obj = o.target;
+                    
+                // if (obj.id === objactive.id){
+                    let centerX =  line.getCenterPoint().x;
+                    let centerY =  line.getCenterPoint().y;
+                    
+                    let x1offset =  line.x1;
+                    let y1offset =  line.y1;
+                    let x2offset =  line.calcLinePoints().x2;
+                    let y2offset =  line.calcLinePoints().y2;
+                    
+                    NewDottedLineCoords = {
+                    x1: x1offset,
+                    y1: y1offset,
+                    x2: centerX+x2offset-line.strokeWidth/2,
+                    y2: centerY+y2offset-line.strokeWidth/2,
+                    }
+                    
+                    line.set({
+                        x1: x1offset,
+                        y1: y1offset,
+                        x2: centerX+x2offset-line.strokeWidth/2,
+                        y2: centerY+y2offset-line.strokeWidth/2,
+                    });
+                    line.setCoords();
+                    
+                    let ArrowHeadFollow = canvas.getObjects().filter(function(item){ return item.id === obj.id && item.type === 'polygon'})[0];
+                    ArrowHeadFollow.set({
+                        left: line.x2,
+                        top: line.y2
+                    });
+                    ArrowHeadFollow.setCoords();
+                // }
             }
         });
 
-        pointersToRemove.forEach(pointer => {
-            canvas.remove(pointer);
-        });
-        
-        canvas.requestRenderAll();
-    }
-
-    function endPointOfArrowLineToFollowPointer(o){
-        let obj = o.target;
-
-        if(obj.id==='pointer1'){
-            canvas.getObjects().forEach(o =>{
-                if(/^solid-ArrowLine\d+$/.test(o.id) && o.label==='selected-ArrowLine'){
-                    o.set({
-                        x1: obj.left,
-                        y1: obj.top
-                    });
-                    o.setCoords();
-
-                    let ArrowHeadActive = canvas.getObjects().filter(function(item){ return item.label === 'selected-ArrowLine' && item.type === 'polygon'})[0];
-
-                    let x1 = o.x1;
-                    let y1 = o.y1;
-                    let x2 = o.x2;
-                    let y2 = o.y2;
-            
-                    let verticalHeight = Math.abs(y2 - y1);
-                    let horizontalWidth = Math.abs(x2 - x1);
-            
-                    let tanRatio = verticalHeight / horizontalWidth;
-                    let basicAngle = Math.atan(tanRatio)*180/Math.PI;
-            
-                    if (x2>x1) {
-                        if (y2<y1) {
-                            ArrowHeadActive.set({
-                                angle: -basicAngle
-                            });
-                        }
-                        else if(y2===y1) {
-                            ArrowHeadActive.set({
-                                angle: 0
-                            });
-                        }
-                        else if(y2>y1) {
-                            ArrowHeadActive.set({
-                                angle: basicAngle
-                            });
-                        }
-                    }else if (x2 < x1) {
-                        if (y2 > y1) {
-                            ArrowHeadActive.set({
-                                angle: 180 - basicAngle
-                            });
-                        } else if (y2 === y1) {
-                            ArrowHeadActive.set({
-                                angle: 180
-                            });
-                        } else if (y2 < y1) {
-                            ArrowHeadActive.set({
-                                angle: 180 + basicAngle
-                            });
-                        }
-                    }
-                    
-                    ArrowHeadActive.setCoords();
-                }
-            });
-        } else if(obj.id==='pointer2'){
-            canvas.getObjects().forEach(o =>{
-                if(/^solid-ArrowLine\d+$/.test(o.id) && o.label==='selected-ArrowLine'){
-                    o.set({
-                        x2: obj.left,
-                        y2: obj.top
-                    });
-                    o.setCoords();
-
-                    let ArrowHeadActive = canvas.getObjects().filter(function(item){ return item.label === 'selected-ArrowLine' && item.type === 'polygon'})[0];
-                    ArrowHeadActive.set({
-                        left: obj.left,
-                        top: obj.top
-                    });
-
-                    let x1 = o.x1;
-                    let y1 = o.y1;
-                    let x2 = o.x2;
-                    let y2 = o.y2;
-            
-                    let verticalHeight = Math.abs(y2 - y1);
-                    let horizontalWidth = Math.abs(x2 - x1);
-            
-                    let tanRatio = verticalHeight / horizontalWidth;
-                    let basicAngle = Math.atan(tanRatio)*180/Math.PI;
-            
-                    if (x2>x1) {
-                        if (y2<y1) {
-                            ArrowHeadActive.set({
-                                angle: -basicAngle
-                            });
-                        }
-                        else if(y2===y1) {
-                            ArrowHeadActive.set({
-                                angle: 0
-                            });
-                        }
-                        else if(y2>y1) {
-                            ArrowHeadActive.set({
-                                angle: basicAngle
-                            });
-                        }
-                    }else if (x2 < x1) {
-                        if (y2 > y1) {
-                            ArrowHeadActive.set({
-                                angle: 180 - basicAngle
-                            });
-                        } else if (y2 === y1) {
-                            ArrowHeadActive.set({
-                                angle: 180
-                            });
-                        } else if (y2 < y1) {
-                            ArrowHeadActive.set({
-                                angle: 180 + basicAngle
-                            });
-                        }
-                    }
-                    
-                    ArrowHeadActive.setCoords();
-                }
-            });
-        } 
     }
 });
