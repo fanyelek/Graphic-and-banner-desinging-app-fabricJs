@@ -3,11 +3,12 @@
     left: 70px; /* Adjust this according to the width of the left sidebar */
     top: 55px;
     background-color: white;
-    height: 100%;
-    width: 230px; /* Adjust width as needed */
+    height: calc(100% - 55px);
+    width: 245px; /* Adjust width as needed */
     border-left: 1px solid #ddd;
     z-index: 10;
     box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
 }
 
 .sidebar-content {

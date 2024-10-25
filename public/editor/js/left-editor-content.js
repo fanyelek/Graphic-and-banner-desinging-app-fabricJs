@@ -120,10 +120,10 @@ $('#add-rectangle').click(function() {
         top: 50,
         width: 200,
         height: 100,
-        fill: 'green',
+        fill: '#D7D7D7',
         padding: 10,
-        rx: 10,
-        ry: 10,
+        rx: 0,
+        ry: 0,
         borderColor: '#0C8CE9',       // Border color around the object
         cornerColor: 'white',         // Corner control fill color (white)
         cornerStrokeColor: '#0C8CE9', // Border color for corner controls (blue)
@@ -143,8 +143,8 @@ $('#add-circle').click(function() {
         radius: 50,
         strokeWidth: 3,
         padding: 10,
-        stroke: 'black',
-        fill: 'grey',
+        // stroke: 'black',
+        fill: '#D7D7D7',
         selectable: true,
         borderColor: '#0C8CE9',       // Border color around the object
         cornerColor: 'white',         // Corner control fill color (white)
@@ -161,7 +161,7 @@ $('#add-triangle').click(function() {
     let ecl = new fabric.Triangle({
         left: 30,
         top: 30,
-        fill: 'grey',
+        fill: '#D7D7D7',
         selectable: true,
         padding: 10,
         borderColor: '#0C8CE9',       // Border color around the object
@@ -175,87 +175,131 @@ $('#add-triangle').click(function() {
     canvas.setActiveObject(ecl);
 })
 
-// Add Ellipse
-$('#add-ellipse').click(function() {
-    let ellipse = new fabric.Ellipse({
-        left: 150,
+// // Add Ellipse
+// $('#add-ellipse').click(function() {
+//     let ellipse = new fabric.Ellipse({
+//         left: 150,
+//         top: 50,
+//         rx: 100, // Horizontal radius
+//         ry: 50,  // Vertical radius
+//         padding: 10,
+//         fill: 'blue',
+//         borderColor: '#0C8CE9',       // Border color around the object
+//         cornerColor: 'white',         // Corner control fill color (white)
+//         cornerStrokeColor: '#0C8CE9', // Border color for corner controls (blue)
+//         cornerStyle: 'circle',        // Make corners circular
+//         cornerSize: 10,               // Size of the corner controls
+//         transparentCorners: false,    // Ensure corners are not transparent
+//     });
+//     canvas.add(ellipse);
+//     canvas.setActiveObject(ellipse);
+// });
+
+// Add Rectangle Rounded
+$('#add-rectangle-rounded').click(function() {
+    let rectangleRounded = new fabric.Rect({
+        left: 100,
         top: 50,
-        rx: 100, // Horizontal radius
-        ry: 50,  // Vertical radius
+        width: 200,
+        height: 100,
+        fill: '#D7D7D7',
         padding: 10,
-        fill: 'blue',
+        rx: 10,
+        ry: 10,
         borderColor: '#0C8CE9',       // Border color around the object
         cornerColor: 'white',         // Corner control fill color (white)
         cornerStrokeColor: '#0C8CE9', // Border color for corner controls (blue)
         cornerStyle: 'circle',        // Make corners circular
         cornerSize: 10,               // Size of the corner controls
         transparentCorners: false,    // Ensure corners are not transparent
+    })
+    canvas.add(rectangleRounded);
+    canvas.setActiveObject(rectangleRounded);
     });
-    canvas.add(ellipse);
-    canvas.setActiveObject(ellipse);
-});
 
-// Add Star
-$('#add-star').click(function() {
-    let starPoints = [
-        { x: 100, y: 0 },
-        { x: 120, y: 50 },
-        { x: 170, y: 50 },
-        { x: 130, y: 80 },
-        { x: 150, y: 130 },
-        { x: 100, y: 100 },
-        { x: 50, y: 130 },
-        { x: 70, y: 80 },
-        { x: 30, y: 50 },
-        { x: 80, y: 50 }
+// Add Hexagon
+$('#add-hexagon').click(function() {
+    let hexagonPoints = [
+        { x: 50,  y: 0   }, // Titik atas
+        { x: 100, y: 25  }, // Titik kanan atas
+        { x: 100, y: 75  }, // Titik kanan bawah
+        { x: 50,  y: 100 }, // Titik bawah
+        { x: 0,   y: 75  }, // Titik kiri bawah
+        { x: 0,   y: 25  }  // Titik kiri atas
     ];
-
-    let star = new fabric.Polygon(starPoints, {
+    
+    // Membuat heksagon menggunakan Fabric.js
+    let hexagon = new fabric.Polygon(hexagonPoints, {
         left: 200,
         top: 100,
         padding: 10,
-        fill: 'yellow',
-        stroke: 'black',
+        fill: '#D7D7D7',
+        // angle: ,
         strokeWidth: 2,
-        borderColor: '#0C8CE9',       // Border color around the object
-        cornerColor: 'white',         // Corner control fill color (white)
-        cornerStrokeColor: '#0C8CE9', // Border color for corner controls (blue)
-        cornerStyle: 'circle',        // Make corners circular
-        cornerSize: 10,               // Size of the corner controls
-        transparentCorners: false,    // Ensure corners are not transparent
+        borderColor: '#0C8CE9',       // Warna border sekitar objek
+        cornerColor: 'white',         // Warna kontrol sudut
+        cornerStrokeColor: '#0C8CE9', // Warna border untuk kontrol sudut
+        cornerStyle: 'circle',        // Membuat sudut kontrol berbentuk lingkaran
+        cornerSize: 10,               // Ukuran kontrol sudut
+        transparentCorners: false,    // Agar sudut kontrol tidak transparan
     });
-    canvas.add(star);
-    canvas.setActiveObject(star);
+    canvas.add(hexagon);
+    canvas.setActiveObject(hexagon);
 });
 
-// Add Polygon (Triangle in this case)
-$('#add-polygon').click(function() {
-    // Definisikan titik-titik segilima
-    let pentagonPoints = [
-        { x: 200, y: 0 },  // Titik atas
-        { x: 250, y: 50 }, // Kanan atas
-        { x: 225, y: 100 }, // Kanan bawah
-        { x: 175, y: 100 }, // Kiri bawah
-        { x: 150, y: 50 }   // Kiri atas
-    ];
 
-    let pentagon = new fabric.Polygon(pentagonPoints, {
-        left: 200,        // Posisi horisontal
-        top: 100,         // Posisi vertikal
-        fill: 'blue',     // Warna isi
-        stroke: 'black',  // Warna garis
-        strokeWidth: 2,    // Lebar garis
+// Add Border Rectangle
+$('#add-border-ractangle').click(function() {
+    let rectangleRounded = new fabric.Rect({
+        left: 100,
+        top: 50,
+        width: 200,
+        height: 100,
+        fill: null,
+        strokeWidth: 4,
+        stroke: '#D7D7D7',
         padding: 10,
+        rx: 0,
+        ry: 0,
         borderColor: '#0C8CE9',       // Border color around the object
         cornerColor: 'white',         // Corner control fill color (white)
         cornerStrokeColor: '#0C8CE9', // Border color for corner controls (blue)
         cornerStyle: 'circle',        // Make corners circular
         cornerSize: 10,               // Size of the corner controls
         transparentCorners: false,    // Ensure corners are not transparent
-    });
-    canvas.add(pentagon);
-    canvas.setActiveObject(pentagon);
-});
+    })
+    canvas.add(rectangleRounded);
+    canvas.setActiveObject(rectangleRounded);
+    })
+
+// // Add Polygon (Triangle in this case)
+// $('#add-polygon').click(function() {
+//     // Definisikan titik-titik segilima
+//     let pentagonPoints = [
+//         { x: 200, y: 0 },  // Titik atas
+//         { x: 250, y: 50 }, // Kanan atas
+//         { x: 225, y: 100 }, // Kanan bawah
+//         { x: 175, y: 100 }, // Kiri bawah
+//         { x: 150, y: 50 }   // Kiri atas
+//     ];
+
+//     let pentagon = new fabric.Polygon(pentagonPoints, {
+//         left: 200,        // Posisi horisontal
+//         top: 100,         // Posisi vertikal
+//         fill: 'blue',     // Warna isi
+//         stroke: 'black',  // Warna garis
+//         strokeWidth: 2,    // Lebar garis
+//         padding: 10,
+//         borderColor: '#0C8CE9',       // Border color around the object
+//         cornerColor: 'white',         // Corner control fill color (white)
+//         cornerStrokeColor: '#0C8CE9', // Border color for corner controls (blue)
+//         cornerStyle: 'circle',        // Make corners circular
+//         cornerSize: 10,               // Size of the corner controls
+//         transparentCorners: false,    // Ensure corners are not transparent
+//     });
+//     canvas.add(pentagon);
+//     canvas.setActiveObject(pentagon);
+// });
 
 
 
@@ -323,8 +367,8 @@ function startAddingLine(o){
 
     line = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
         id: 'solid-line',
-        stroke: 'red',
-        strokeWidth: 15,
+        stroke: 'black',
+        strokeWidth: 3,
         hasControls: false,
         borderColor: '#0C8CE9',       // Border color around the object
     });
@@ -602,7 +646,7 @@ function StartAddingDashLine(o){
 
     DashLine = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y],{
         id: 'dash-line',
-        stroke: 'red',
+        stroke: 'black',
         strokeWidth: 3,
         strokeDashArray: [10, 5],
         hasControls: false,
@@ -903,7 +947,7 @@ function StartAddingDottedLine(o){
 
     DottedLine = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y],{
         id: 'Dotted-line',
-        stroke: 'red',
+        stroke: 'black',
         strokeWidth: 3,
         strokeDashArray: [3, 5],
         hasControls: false,
@@ -1210,7 +1254,7 @@ function startAddingArrowLine(o){
 
     ArrowLine = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
         id: 'solid-ArrowLine'+ArrowLineId,
-        stroke: 'red',
+        stroke: 'black',
         strokeWidth: 3,
         hasControls: false,
         borderColor: '#0C8CE9',       // Border color around the object
@@ -1222,7 +1266,7 @@ function startAddingArrowLine(o){
         {x: -20, y: 10}
     ], {
         id: 'solid-ArrowLine'+ArrowLineId,
-        fill: 'red',
+        fill: 'black',
         selectable: true,
         hasControls: false,
         top: pointer.y,
