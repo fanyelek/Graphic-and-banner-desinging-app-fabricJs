@@ -119,46 +119,46 @@
 
         <h6>Graphics Shape</h6>
         <div class="container-icons" style="display: flex;flex-wrap: wrap;justify-content: space-between;">
-            <a href="#" id="add-#" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
+            <a href="#" id="add-graphic-2" data-svg-url="{{ asset('images/icon-dashboard/graphic-2-svg.svg') }}" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
               <img src="{{ asset('images/icon-dashboard/Graphic 2.png') }}" width="70px" alt="rectangle" style="margin-bottom: 10px"><br>
             </a>
-            <a href="#" id="add-#" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
+            <a href="#" id="add-graphic-3" data-svg-url="{{ asset('images/icon-dashboard/graphic-3-svg.svg') }}" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
               <img src="{{ asset('images/icon-dashboard/Graphic 3.png') }}" width="70px" alt="circle" style="margin-bottom: 10px"><br>
             </a>
-            <a href="#" id="add-#" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
+            <a href="#" id="add-graphic-5" data-svg-url="{{ asset('images/icon-dashboard/graphic-5-svg.svg') }}" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
               <img src="{{ asset('images/icon-dashboard/Graphic 5.png') }}" width="70px" alt="triangle" style="margin-bottom: 10px"><br>
             </a>
-            <a href="#" id="add-#" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
+            <a href="#" id="add-graphic-1" data-svg-url="{{ asset('images/icon-dashboard/graphic-1-svg.svg') }}" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
               <img src="{{ asset('images/icon-dashboard/Graphic 1.png') }}" width="70px" alt="rectangle-rounded" style="margin-bottom: 10px"><br>
             </a>
-            <a href="#" id="add-#" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
+            <a href="#" id="add-graphic-4" data-svg-url="{{ asset('images/icon-dashboard/graphic-4-svg.svg') }}" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
               <img src="{{ asset('images/icon-dashboard/Graphic 4.png') }}" width="70px" alt="rectangle" style="margin-bottom: 10px"><br>
             </a>
-            <a href="#" id="add-#" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
+            <a href="#" id="add-graphic-6" data-svg-url="{{ asset('images/icon-dashboard/graphic-6-svg.svg') }}" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
               <img src="{{ asset('images/icon-dashboard/Graphic 6.png') }}" width="70px" alt="rectangle" style="margin-bottom: 10px"><br>
             </a>
-            <a href="#" id="add-#" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
+            <a href="#" id="add-graphic-7" data-svg-url="{{ asset('images/icon-dashboard/graphic-7-svg.svg') }}" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
               <img src="{{ asset('images/icon-dashboard/Graphic 7.png') }}" width="70px" alt="rectangle" style="margin-bottom: 10px"><br>
             </a>
-            <a href="#" id="add-#" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
+            <a href="#" id="add-graphic-8" data-svg-url="{{ asset('images/icon-dashboard/graphic-8-svg.svg') }}" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
               <img src="{{ asset('images/icon-dashboard/Graphic 8.png') }}" width="70px" alt="rectangle" style="margin-bottom: 10px"><br>
             </a>
-            <a href="#" id="add-#" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
+            <a href="#" id="add-graphic-9" data-svg-url="{{ asset('images/icon-dashboard/graphic-9-svg.svg') }}" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
               <img src="{{ asset('images/icon-dashboard/Graphic 9.png') }}" width="70px" alt="rectangle" style="margin-bottom: 10px"><br>
             </a>
-            <a href="#" id="add-#" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
+            <a href="#" id="add-graphic-10" data-svg-url="{{ asset('images/icon-dashboard/graphic-10-svg.svg') }}" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
               <img src="{{ asset('images/icon-dashboard/Graphic 10.png') }}" width="70px" alt="rectangle" style="margin-bottom: 10px"><br>
             </a>
-            <a href="#" id="add-#" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
+            <a href="#" id="add-graphic-11" data-svg-url="{{ asset('images/icon-dashboard/graphic-11-svg.svg') }}" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
               <img src="{{ asset('images/icon-dashboard/Graphic 11.png') }}" width="70px" alt="rectangle" style="margin-bottom: 10px"><br>
             </a>
-            <a href="#" id="add-#" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
+            <a href="#" id="add-graphic-12" data-svg-url="{{ asset('images/icon-dashboard/graphic-12-svg.svg') }}" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
               <img src="{{ asset('images/icon-dashboard/Graphic 12.png') }}" width="70px" alt="rectangle" style="margin-bottom: 10px"><br>
             </a>
-            <a href="#" id="add-#" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
+            <a href="#" id="add-graphic-13" data-svg-url="{{ asset('images/icon-dashboard/graphic-13-svg.svg') }}" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
               <img src="{{ asset('images/icon-dashboard/Graphic 13.png') }}" width="70px" alt="rectangle" style="margin-bottom: 10px"><br>
             </a>
-            <a href="#" id="add-#" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
+            <a href="#" id="add-graphic-14" data-svg-url="{{ asset('images/icon-dashboard/graphic-14-svg.svg') }}" style="width: 20%;margin-bottom: 20px;margin-right: 20px;text-align: center;">
               <img src="{{ asset('images/icon-dashboard/Graphic 14.png') }}" width="70px" alt="rectangle" style="margin-bottom: 10px"><br>
             </a>
         </div>
