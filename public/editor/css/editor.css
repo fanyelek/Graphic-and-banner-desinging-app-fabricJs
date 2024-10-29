@@ -445,12 +445,29 @@ strong {
   box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.1), 0 0 200px rgba(0, 0, 0, 0.1);
 }
 
-#konva-container {
-  position: absolute; /* Position Konva.js container absolutely */
-  top: 0;
-  left: 0;
-  z-index: 2; /* Higher z-index to overlay on top of Fabric.js */
-  pointer-events: none; /* Optional: Disable pointer events to make only Fabric.js canvas interactive */
+.canvas-wrapper {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.canvas-toolbar {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 100;
+}
+
+.btn-toolbar {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  z-index: 9999999;
+  margin-top: 100px;
 }
 /* Text Editing */
 

@@ -24,16 +24,14 @@
 
     <!-- Canvas Image -->
     <div id="editor-content">
-      <div id="editor-canvas">
-        <canvas id="graphic-editor" width='500px' height='500px'></canvas>
-        <!-- <div id="konva-container"></div> -->
-      </div>
+          <div id="editor-canvas">
+            <canvas id="graphic-editor" width='500px' height='500px'></canvas>
+          </div>
     </div>
 
-
+    
     <!-- Sidebar -->
-    <div id="editor-layers">
-
+    <div id="editor-layers">      
       <div id="sidebar-layers-nav" class="clearfix">
         <a id="settings-tab" href="#" style="width: 50%;">Graphic Settings</a>
         <a id="editing-tab" style="width: 50%;" href="#">Currently Editing</a>

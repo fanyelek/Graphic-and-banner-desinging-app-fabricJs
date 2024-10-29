@@ -923,6 +923,7 @@ object.clone(function(clone) {
     'margin-top' : -$('.canvas-container').outerHeight()/2
   })
 
+
   setTimeout(function() {
     let width = $('#graphic-width').val()
     let half_width = parseInt(width) / 2 - 20
