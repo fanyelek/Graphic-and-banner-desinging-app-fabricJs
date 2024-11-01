@@ -1,95 +1,19 @@
-var canvasCount = 0;
-var canvasOption = {};
-var canvasId;
 var canvas;
-
 $(document).ready(function() {
  
   var zoomMax = 23;
   var SCALE_FACTOR = 1.3;
 
-  initializeCanvas('graphic-editor-0');
+
 
   
   // Define Canvas
-  function initializeCanvas(canvasId){
-      
-    const newcanvas = new fabric.Canvas(canvasId, {
-      id: canvasCount,
-      selectionColor: 'blue',
-      selectionLineWidth: 2,
-      width: 500,
-      height: 500,
-      
-    });
-
-    newcanvas.preserveObjectStacking = true;
-    canvasOption[canvasCount] = newcanvas;
-    canvas = newcanvas;
-    canvasCount++;
-
-    const rect = new fabric.Rect({
-        left: 10,
-        top: 10,
-        fill: 'blue',
-        width: 100,
-        height: 100
-    });
-    canvas.add(rect);
-
-
-    console.log(canvasId)
-
-  }
-
-
-
-  document.getElementById('add-canvases').addEventListener('click', function(e) {
-    // Buat div wrapper baru untuk canvas kedua
-
-    const newEditorSpace = document.createElement("div");
-    newEditorSpace.className = "editor-space"
-
-    // Buat toolbar baru
-    const newToolbar = document.createElement("div");
-    newToolbar.className = "toolbar-canvas";
-    const assetPath = "{{ asset('images/icon-dashboard/canvas-toolbar/') }}";
-    newToolbar.innerHTML = `
-        <div class="icon-toolbar-canvas">
-            <a href="#"><img src="${copyIcon}"></a>
-            <a href="#"><img src="${duplicateIcon}"></a>
-            <a href="#"><img src="${lockIcon}"></a>
-            <a href="#"><img src="${deleteIcon}"></a>
-        </div>
-    `;
-
-    const newEditorCanvas = document.createElement("div");
-    newEditorCanvas.className = "editor-canvas"
-
-    // Buat elemen canvas baru
-    const newCanvas = document.createElement("canvas");
-    newCanvas.id = "graphic-editor-" + canvasCount;
-
-    // Tambahkan toolbar dan canvas ke dalam container baru
-    newEditorSpace.appendChild(newToolbar);
-    newEditorSpace.appendChild(newEditorCanvas);
-    newEditorCanvas.appendChild(newCanvas);
-
-    // Tambahkan container baru ke dalam editor-content
-    document.getElementById("editor-content").appendChild(newEditorSpace);
-    initializeCanvas(newCanvas.id);
-
-    // const upperCanvasElements = document.getElementsByClassName('upper-canvas');
-
-    // for (let i = 0; i < upperCanvasElements.length; i++) {
-    //     upperCanvasElements[i].addEventListener('click', function(event) {
-    //         console.log('disini');
-    //     });
-    // }
-    console.log(canvasOption)
+   canvas = new fabric.Canvas('graphic-editor', {
+    selectionColor: 'blue',
+    selectionLineWidth: 2,
+    
   });
-
-
+  canvas.preserveObjectStacking = true;
 
 
   // Guidelines
@@ -995,6 +919,13 @@ object.clone(function(clone) {
       }
   });
 
+  $('.canvas-container').css({
+    'position' : 'fixed',
+    'left' : '41.5%',
+    'top' : '50%',
+    'margin-left' : -$('.canvas-container').outerWidth()/2,
+    'margin-top' : -$('.canvas-container').outerHeight()/2
+  })
 
 
   setTimeout(function() {

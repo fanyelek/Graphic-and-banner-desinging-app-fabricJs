@@ -131,11 +131,11 @@ strong {
 }
 
 #editor {
-  padding-top: 55px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  background: white;
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  overflow: hidden;
 }
 
 #editor-deselect-overlay {
@@ -204,14 +204,7 @@ strong {
 
 #editor-content {
   width: 100%;
-  padding-top: 60px;
-  padding-bottom: 100px;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 100px;
+  height: 100%;
 }
 
 /* Popup */
@@ -423,6 +416,9 @@ strong {
 }
 
 
+#editor-canvas{
+  overflow-x: scroll;
+}
 #containerLayers {
   list-style-type: none;
   margin: 0;
@@ -430,67 +426,24 @@ strong {
   width: 100%;
 }
 
-
-
-
-
-
 /* Canvas */
 
-.editor-space{
-  /* margin-top: 50px; */
-  display: flex;
-  width: 500px;
-  align-items: center;
-  justify-content: center;   
-  /* border:solid 1px #000; */
-  flex-direction: column;
+#editor-canvas {
+  position: relative;
+  user-select: none;
+  margin: 0 auto;
+  display: block;
+  height: 100%;
+  margin: auto;
 }
 
-.toolbar-canvas{
-  display: flex;
-  height: 55px;
-  min-width: 500px;
-  align-items: center;
-  justify-content: left;   
-  /* border:solid 1px red; */
-}
-
-.editor-canvas {
-  /* margin-top: 10px; */
-  display: flex;
-  width: 500px;
-  height: 500px;
-  align-items: center;
-  justify-content: center;   
-  /* border:solid 1px blue; */
+#editor-canvas .canvas-container {
+  background: #fff;
+  display: block;
+  margin: 40px auto;
+  z-index: 50;
   box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.1), 0 0 200px rgba(0, 0, 0, 0.1);
 }
-
-.icon-toolbar-canvas img{
-  width: 40px;
-}
-
-.icon-toolbar-canvas img:hover {
-  cursor: pointer;
-}
-
-/* #editor-canvas1 {
-  
-  display: flex;  
-  width: 500px;
-  height: 500px;
-  align-items: center;
-  justify-content: center;  
-  border:solid 1px #000;
-} */
-
-/* #editor-canvas .canvas-container {
-  display: flex;
-  border:solid 1px blue;
-  align-items: center;
-  justify-content: center;  
-} */
 
 .canvas-wrapper {
   margin-bottom: 20px;

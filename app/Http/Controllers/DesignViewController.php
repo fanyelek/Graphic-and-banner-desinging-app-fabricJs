@@ -12,7 +12,9 @@ class DesignViewController extends Controller
 {
 
     public function percobaan(){
-        return view('percobaan');
+        $title = "";
+        $keywords = "";
+        return view('percobaan',compact('title','keywords'));
     }
 
 
