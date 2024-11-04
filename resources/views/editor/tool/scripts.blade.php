@@ -4,13 +4,13 @@
   <script src="/editor/js/fabric-settings.js"></script>
   <script src="/editor/js/fabricjs-custom-controls.js"></script>
   <script src="/editor/js/fabricjs-guidelines.js"></script>
+  <script src="/editor/js/editor.js"></script>
+  <script src="/editor/js/left-editor.js"></script>
+  <script src="/editor/js/left-editor-content.js"></script>
   <script src="/editor/js/select2.js"></script>
   <script src="/editor/js/spectrum.js"></script>
   <script src="/editor/js/gradientpicker.js"></script>
   <script src="/editor/js/filedrop.js"></script>
-  <script src="/editor/js/editor.js"></script>
-  <script src="/editor/js/left-editor.js"></script>
-  <script src="/editor/js/left-editor-content.js"></script>
   <script src="https://rawgithub.com/desandro/masonry/v2.1.08/jquery.masonry.js"></script>
   <script src="https://imagesloaded.desandro.com/imagesloaded.pkgd.js"></script>
   <script src="/editor/js/unsplash.js"></script>

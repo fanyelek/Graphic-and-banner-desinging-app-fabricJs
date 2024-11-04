@@ -70,18 +70,22 @@
       <div id="content-text" style="display: none;">
         <h6>Text</h6>
         <a href="#" id="add-title">
-          <img src="{{ asset('images/icon-dashboard/Group 67 (1).png') }}" width="200px" alt="text" style="margin-bottom: 10px"><br>
+          <img src="{{ asset('images/icon-dashboard/add title.png') }}" width="210px" alt="text" style="margin-bottom: 10px"><br>
         </a>
         <a href="#" id="add-subtitle">
-          <img src="{{ asset('images/icon-dashboard/Group 68 (1).png') }}" width="200px" alt="text" style="margin-bottom: 10px"><br>
+          <img src="{{ asset('images/icon-dashboard/add subheading.png') }}" width="210px" alt="text" style="margin-bottom: 10px"><br>
         </a>
         <a href="#" id="add-paragraph">
-          <img src="{{ asset('images/icon-dashboard/Group 69 (1).png') }}" width="200px" alt="text" style="margin-bottom: 10px"><br>
+          <img src="{{ asset('images/icon-dashboard/add body text.png') }}" width="210px" alt="text" style="margin-bottom: 10px"><br>
         </a>
         
         <h6>Quotes & Annotation</h6>
-        <button id="add-quote">Quotes</button>
-        <button id="add-annotation">Annotation</button>
+        <a href="#" id="add-quote">
+          <img src="{{ asset('images/icon-dashboard/quotes.png') }}" width="210px" alt="text" style="margin-bottom: 10px"><br>
+        </a>
+        <a href="#" id="add-annotation">
+          <img src="{{ asset('images/icon-dashboard/annotation.png') }}" width="210px" alt="text" style="margin-bottom: 10px"><br>
+        </a>
         
         <h6>List</h6>
         <button id="add-bullet-list">Bullet List</button>

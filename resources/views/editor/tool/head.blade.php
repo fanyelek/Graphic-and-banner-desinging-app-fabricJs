@@ -5,10 +5,11 @@
   <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/editor/css/select2.css">
-  <link rel="stylesheet" href="/editor/css/left-editor.css">
   <link rel="stylesheet" href="/editor/css/spectrum.css">
   <link rel="stylesheet" href="/editor/css/gradientpicker.css">
   <link rel="stylesheet" href="/editor/css/editor.css">
+  <link rel="stylesheet" href="/editor/css/left-editor.css">
+  <link rel="stylesheet" href="/editor/css/bottom-editor.css">
   <link rel="stylesheet" href="/editor/css/unsplah-images.css">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="design-name" content="{{ $title }}">

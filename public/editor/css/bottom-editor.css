@@ -1,0 +1,38 @@
+#sticky-toolbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white; /* Sesuaikan warna */
+    /* border-top: 1px solid #ddd; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-top: 1px solid rgba(0, 0, 0, 0.15); /* Border lebih jelas */
+}
+
+#sticky-toolbar button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    margin: 0;
+}
+
+#page-info {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 25px;
+}
+
+#sticky-toolbar img{
+    width: 30px;
+}
+
+
+#sticky-toolbar #next-page{
+    margin-right: 20px;
+}
